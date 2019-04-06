@@ -66,11 +66,6 @@ namespace ParserScopus
 
         }
 
-        public int GetCountArticles(string url)
-        {
-            throw new NotImplementedException();
-        }
-
         public int GetCountArticle(string url)
         {
             IWebElement Count = _driver.FindElement(By.ClassName("recordPageCount"));
