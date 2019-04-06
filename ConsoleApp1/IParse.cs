@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ParserScopus
 {
-    interface IParse
+    interface IParse : IDisposable
     {
-        List<ResultEmail> ParseSpecificArticle(string url, out string nextUrl);
+        List<ResultEmail> ParseSpecificArticle(string url);
 
         string GetNextArticle(string url);
 
         int GetCountArticle(string url);
+
     }
 }

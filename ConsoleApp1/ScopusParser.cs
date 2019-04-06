@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 
 namespace ParserScopus
 {
@@ -21,33 +15,27 @@ namespace ParserScopus
         }
 
 
-        public List<ResultEmail> ParseSpecificArticle(string url, out string nextUrl)
+        public List<ResultEmail> ParseSpecificArticle(string url)
         {
             _driver.Navigate().GoToUrl(url);
-            IWebElement authorlist = _driver.FindElement(By.Id("authorlist"));
+            IWebElement authorsList = _driver.FindElement(By.Id("authorlist"));
             var emails = new List<ResultEmail>();
-            IWebElement lastElement = null;
-            foreach (var element in authorlist.FindElements(By.TagName("li")))
+            foreach (var element in authorsList.FindElements(By.TagName("li")))
             {
 
                 try
                 {
                     var elementWithEmail = element.FindElement(By.ClassName("correspondenceEmail"));
-                    var email = elementWithEmail.GetAttribute("href");
-                    var fio = lastElement?.Text;
+                    var email = elementWithEmail.GetAttribute("href").Substring(7);
+                    var elementWithFio = element.FindElement(By.ClassName("anchorText"));
+                    var fio = elementWithFio.Text;
                     emails.Add(new ResultEmail(fio, email));
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     // ignored
                 }
-                finally
-                {
-                    lastElement = element;
-                }
             }
-            nextUrl = GetNextArticle(url);
-            GetCountArticle(url);
             return emails;
         }
 
@@ -55,8 +43,8 @@ namespace ParserScopus
         {
             try
             {
-                IWebElement nextLinkURL = _driver.FindElement(By.ClassName("nextLink"));
-                IWebElement nextLink = nextLinkURL.FindElement(By.XPath("./a"));
+                IWebElement nextLinkUrl = _driver.FindElement(By.ClassName("nextLink"));
+                IWebElement nextLink = nextLinkUrl.FindElement(By.XPath("./a"));
                 return nextLink.GetAttribute("href");
             }
             catch (Exception)
@@ -96,6 +84,11 @@ namespace ParserScopus
                 //Console.WriteLine(ArticleCount);
                 return Convert.ToInt32(ArticleCount);
             }
+        }
+
+        public void Dispose()
+        {
+            _driver?.Dispose();
         }
     }
 }
