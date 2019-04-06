@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using OpenQA.Selenium;
@@ -23,12 +24,27 @@ namespace ParserScopus
         public List<ResultEmail> ParseSpecificArticle(string url, out string nextUrl)
         {
             _driver.Navigate().GoToUrl(url);
-            ReadOnlyCollection<IWebElement> webElement = _driver.FindElements(By.ClassName("correspondenceEmail"));
+            IWebElement authorlist = _driver.FindElement(By.Id("authorlist"));
             var emails = new List<ResultEmail>();
-            foreach (var element in webElement)
+            IWebElement lastElement = null;
+            foreach (var element in authorlist.FindElements(By.TagName("li")))
             {
-                var email = element.GetAttribute("href");
-                emails.Add(new ResultEmail("", email));
+
+                try
+                {
+                    var elementWithEmail = element.FindElement(By.ClassName("correspondenceEmail"));
+                    var email = elementWithEmail.GetAttribute("href");
+                    var fio = lastElement?.Text;
+                    emails.Add(new ResultEmail(fio, email));
+                }
+                catch (Exception e)
+                {
+                    // ignored
+                }
+                finally
+                {
+                    lastElement = element;
+                }
             }
             nextUrl = GetNextArticle(url);
             GetCountArticle(url);
@@ -39,10 +55,20 @@ namespace ParserScopus
         {
             IWebElement nextLinkURL = _driver.FindElement(By.ClassName("nextLink"));
             IWebElement nextLink = nextLinkURL.FindElement(By.XPath("./a"));
+            try
+            {
+                return nextLink.GetAttribute("href");
+            }
+            catch (Exception)
+            {
+                return null;
+            }
 
-            Console.WriteLine(value: nextLink.GetAttribute("href"));
+        }
 
-            return nextLink.GetAttribute("href");
+        public int GetCountArticles(string url)
+        {
+            throw new NotImplementedException();
         }
 
         public int GetCountArticle(string url)
