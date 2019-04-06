@@ -1,23 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Reflection;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
-namespace ConsoleApp1
+namespace ParserScopus
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            IWebDriver drive = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)); ;
-            drive.Navigate().GoToUrl("https://www.scopus.com/record/display.uri?eid=2-s2.0-85063440381&origin=resultslist&sort=plf-f&src=s&nlo=&nlr=&nls=&sid=05b7b965a025ff8795f30fbd1fa9dcef&sot=b&sdt=cl&cluster=scopubyr%2c%222019%22%2ct&sl=110&s=AF-ID%28%22Tomskij+Gosudarstvennyj+Universitet+Sistem+Upravlenija+i+Radioelektroniki%22+60010892%29+AND+SUBJAREA%28PHYS%29&relpos=0&citeCnt=0&searchTerm=");
-            ReadOnlyCollection<IWebElement> webElement = drive.FindElements(By.ClassName("correspondenceEmail"));
-            foreach (var element in webElement)
-            {
-                Console.WriteLine((element.GetAttribute("href")));
-            }
+            var driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+            var parser = new ScopusParser(driver);
+            List<ResultEmail> emailWithAuthor = new List<ResultEmail>();
+            var firstUrl = "https://www.scopus.com/record/display.uri?origin=recordpage&eid=2-s2.0-85061176683&citeCnt=0&noHighlight=false&sort=plf-f&src=s&nlo=&nlr=&nls=&sid=05b7b965a025ff8795f30fbd1fa9dcef&sot=b&sdt=cl&cluster=scopubyr%2c%222019%22%2ct&sl=110&s=AF-ID%28%22Tomskij+Gosudarstvennyj+Universitet+Sistem+Upravlenija+i+Radioelektroniki%22+60010892%29+AND+SUBJAREA%28PHYS%29&relpos=1";
+            var result = parser.ParseSpecificArticle(firstUrl, out var nextUrl);
+            if (result.Count != 0)
+                emailWithAuthor.AddRange(result);
+            if (nextUrl != null)
+                parser.ParseSpecificArticle(nextUrl, out nextUrl);
+            Console.ReadKey();
         }
     }
 }
