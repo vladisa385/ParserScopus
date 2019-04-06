@@ -52,7 +52,12 @@ namespace ParserScopus
 
         public string GetNextArticle(string url)
         {
-            return null;
+            IWebElement nextLinkURL = _driver.FindElement(By.ClassName("nextLink"));
+            IWebElement nextLink = nextLinkURL.FindElement(By.XPath("./a"));
+
+            Console.WriteLine(value: nextLink.GetAttribute("href"));
+
+            return nextLink.GetAttribute("href");
         }
 
         public int GetCountArticles(string url)
