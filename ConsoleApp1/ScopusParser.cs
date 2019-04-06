@@ -53,10 +53,10 @@ namespace ParserScopus
 
         public string GetNextArticle(string url)
         {
-            IWebElement nextLinkURL = _driver.FindElement(By.ClassName("nextLink"));
-            IWebElement nextLink = nextLinkURL.FindElement(By.XPath("./a"));
             try
             {
+                IWebElement nextLinkURL = _driver.FindElement(By.ClassName("nextLink"));
+                IWebElement nextLink = nextLinkURL.FindElement(By.XPath("./a"));
                 return nextLink.GetAttribute("href");
             }
             catch (Exception)
