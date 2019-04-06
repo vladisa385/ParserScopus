@@ -6,13 +6,13 @@ namespace ParserScopus
 {
     public class ResultEmail
     {
-        private readonly string _email;
-        private readonly string _fio;
+        public string Email { get; }
+        public string Fio { get; }
 
         public ResultEmail(string fio, string email)
         {
-            _fio = fio;
-            _email = email;
+            Fio = fio;
+            Email = email;
         }
 
 

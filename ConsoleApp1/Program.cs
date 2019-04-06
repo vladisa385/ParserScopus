@@ -21,6 +21,10 @@ namespace ParserScopus
                 emailWithAuthor.AddRange(result);
             if (nextUrl != null)
                 parser.ParseSpecificArticle(nextUrl, out nextUrl);
+            foreach (ResultEmail var in emailWithAuthor)
+            {
+                Console.WriteLine($"{var.Fio}!!!{var.Email}");
+            }
             Console.ReadKey();
         }
     }
