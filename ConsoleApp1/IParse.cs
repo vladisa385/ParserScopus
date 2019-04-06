@@ -10,5 +10,6 @@ namespace ParserScopus
 
         string GetNextArticle(string url);
 
+        int GetCountArticle(string url);
     }
 }

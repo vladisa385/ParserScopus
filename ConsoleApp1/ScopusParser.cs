@@ -31,6 +31,7 @@ namespace ParserScopus
                 emails.Add(new ResultEmail("", email));
             }
             nextUrl = GetNextArticle(url);
+            GetCountArticle(url);
             return emails;
         }
 
@@ -42,6 +43,38 @@ namespace ParserScopus
             Console.WriteLine(value: nextLink.GetAttribute("href"));
 
             return nextLink.GetAttribute("href");
+        }
+
+        public int GetCountArticle(string url)
+        {
+            IWebElement Count = _driver.FindElement(By.ClassName("recordPageCount"));
+
+            string ArticleCount = "";
+            bool check = false;
+
+            for (int i = 0; i < Count.Text.Length; i++)
+            {
+                if (Count.Text[i].ToString() == "з")
+                {
+                    check = true;
+                    i++;
+                }
+
+                if (check == true)
+                {
+                    ArticleCount = ArticleCount + Count.Text[i].ToString();
+                }
+            }
+
+            if (ArticleCount == "")
+            {
+                return 0;
+            }
+            else
+            {
+                //Console.WriteLine(ArticleCount);
+                return Convert.ToInt32(ArticleCount);
+            }
         }
     }
 }
