@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using OpenQA.Selenium;
 
-namespace ParserScopus
+namespace ScopusModel
 {
     public class ScopusParser : IParse
     {
