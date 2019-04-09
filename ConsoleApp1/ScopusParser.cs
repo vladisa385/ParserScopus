@@ -14,7 +14,6 @@ namespace ParserScopus
             _driver = driver;
         }
 
-
         public List<ResultEmail> ParseSpecificArticle(string url)
         {
             _driver.Navigate().GoToUrl(url);
@@ -31,7 +30,7 @@ namespace ParserScopus
                     var fio = elementWithFio.Text;
                     emails.Add(new ResultEmail(fio, email));
                 }
-                catch (Exception)
+                catch (NoSuchElementException)
                 {
                     // ignored
                 }
