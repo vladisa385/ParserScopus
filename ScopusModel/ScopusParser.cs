@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using OpenQA.Selenium;
 
-namespace ParserScopus
+namespace ScopusModel
 {
     public class ScopusParser : IParse
     {
@@ -13,6 +13,7 @@ namespace ParserScopus
         {
             _driver = driver;
         }
+
 
         public List<ResultEmail> ParseSpecificArticle(string url)
         {
@@ -30,7 +31,7 @@ namespace ParserScopus
                     var fio = elementWithFio.Text;
                     emails.Add(new ResultEmail(fio, email));
                 }
-                catch (NoSuchElementException)
+                catch (Exception)
                 {
                     // ignored
                 }
@@ -80,7 +81,6 @@ namespace ParserScopus
             }
             else
             {
-                //Console.WriteLine(ArticleCount);
                 return Convert.ToInt32(ArticleCount);
             }
         }

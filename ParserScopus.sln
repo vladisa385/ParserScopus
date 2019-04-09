@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.572
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParserScopus", "ConsoleApp1\ParserScopus.csproj", "{63AAB176-870B-4777-9A62-70EE23F04024}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewScopusParser", "ViewScopusParser\ViewScopusParser.csproj", "{1877DF60-2658-4A2D-9F62-48E686CB1A77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScopusModel", "ScopusModel\ScopusModel.csproj", "{B2E20B7F-CE5B-4578-97A2-3B48A1BEEF3B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{63AAB176-870B-4777-9A62-70EE23F04024}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63AAB176-870B-4777-9A62-70EE23F04024}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63AAB176-870B-4777-9A62-70EE23F04024}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1877DF60-2658-4A2D-9F62-48E686CB1A77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1877DF60-2658-4A2D-9F62-48E686CB1A77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1877DF60-2658-4A2D-9F62-48E686CB1A77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1877DF60-2658-4A2D-9F62-48E686CB1A77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2E20B7F-CE5B-4578-97A2-3B48A1BEEF3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2E20B7F-CE5B-4578-97A2-3B48A1BEEF3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2E20B7F-CE5B-4578-97A2-3B48A1BEEF3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2E20B7F-CE5B-4578-97A2-3B48A1BEEF3B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
