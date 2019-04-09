@@ -71,7 +71,7 @@ namespace ViewScopusParser
             catch (NoSuchElementException)
             {
                 MessageBox.Show(@"Проверьте Ваше интернет-соединение. Возможно, вы забыли подключить VPN или указали неверную ссылку.",
-                    "Ошибка соединения!", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+                    @"Ошибка соединения!", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
 
             }
             catch (WebDriverException)
@@ -79,11 +79,11 @@ namespace ViewScopusParser
                 MessageBox.Show(@"При запуске парсера возникла проблема. Вы указали неверный URL.",
                     @"Ошибка соединения!", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
             }
-            //catch (Exception ee)
-            //{
-            //    MessageBox.Show(@"При запуске парсера возникла проблема. Попробуйте заново запустить программу.",
-            //        @"Ошибка запуска!", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
-            //}
+            catch (Exception ee)
+            {
+                MessageBox.Show(@"При запуске парсера возникла проблема. Попробуйте заново запустить программу.",
+                    @"Ошибка запуска!", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            }
             finally
             {
                 parser.Dispose();

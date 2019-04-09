@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using OpenQA.Selenium;
 
 namespace ScopusModel
@@ -28,7 +29,7 @@ namespace ScopusModel
                     var elementWithEmail = element.FindElement(By.ClassName("correspondenceEmail"));
                     var email = elementWithEmail.GetAttribute("href").Substring(7);
                     var elementWithFio = element.FindElement(By.ClassName("anchorText"));
-                    var fio = elementWithFio.Text;
+                    var fio = RemoveBadSymbols(elementWithFio.Text);
                     emails.Add(new ResultEmail(fio, email));
                 }
                 catch (Exception)
@@ -56,38 +57,47 @@ namespace ScopusModel
 
         public int GetCountArticle(string url)
         {
-            IWebElement Count = _driver.FindElement(By.ClassName("recordPageCount"));
+            IWebElement count = _driver.FindElement(By.ClassName("recordPageCount"));
 
-            string ArticleCount = "";
+            string articleCount = "";
             bool check = false;
 
-            for (int i = 0; i < Count.Text.Length; i++)
+            for (int i = 0; i < count.Text.Length; i++)
             {
-                if (Count.Text[i].ToString() == "з" || Count.Text[i].ToString() == "f")
+                if (count.Text[i].ToString() == "з" || count.Text[i].ToString() == "f")
                 {
                     check = true;
                     i++;
                 }
 
-                if (check == true)
+                if (check)
                 {
-                    ArticleCount = ArticleCount + Count.Text[i].ToString();
+                    articleCount = articleCount + count.Text[i];
                 }
             }
 
-            if (ArticleCount == "")
-            {
-                return 0;
-            }
-            else
-            {
-                return Convert.ToInt32(ArticleCount);
-            }
+            return articleCount == "" ? 0 : Convert.ToInt32(articleCount);
         }
 
         public void Dispose()
         {
             _driver?.Dispose();
         }
+
+        private string RemoveBadSymbols(string rawString)
+        {
+            int numberLastUpperSymbol = rawString.Length;
+            foreach (var i in rawString.Reverse())
+            {
+
+                if (char.IsUpper(i))
+                {
+                    return rawString.Substring(0, numberLastUpperSymbol);
+                }
+                numberLastUpperSymbol -= 1;
+            }
+            return rawString;
+        }
+
     }
 }
