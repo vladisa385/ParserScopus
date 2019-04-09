@@ -123,6 +123,12 @@
   <metadata name="EmailColumn.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <metadata name="FIOColumn.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="EmailColumn.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <data name="URLTextBox.Text" xml:space="preserve">
     <value>https://www.scopus.com/record/display.uri?origin=recordpage&amp;eid=2-s2.0-85063440381&amp;citeCnt=0&amp;noHighlight=false&amp;sort=plf-f&amp;src=s&amp;nlo=&amp;nlr=&amp;nls=&amp;sid=05b7b965a025ff8795f30fbd1fa9dcef&amp;sot=b&amp;sdt=cl&amp;cluster=scopubyr%2c%222019%22%2ct&amp;sl=110&amp;s=AF-ID%28%22Tomskij+Gosudarstvennyj+Universitet+Sistem+Upravlenija+i+Radioelektroniki%22+60010892%29+AND+SUBJAREA%28PHYS%29&amp;relpos=0</value>
   </data>
