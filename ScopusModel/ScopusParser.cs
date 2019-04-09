@@ -81,7 +81,6 @@ namespace ScopusModel
             }
             else
             {
-                //Console.WriteLine(ArticleCount);
                 return Convert.ToInt32(ArticleCount);
             }
         }
