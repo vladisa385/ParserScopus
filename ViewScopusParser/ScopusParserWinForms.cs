@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -14,7 +7,7 @@ using Microsoft.Office.Interop.Excel;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-using Label = System.Windows.Forms.Label;
+using Action = System.Action;
 using TextBox = System.Windows.Forms.TextBox;
 
 namespace ViewScopusParser
@@ -28,34 +21,27 @@ namespace ViewScopusParser
 
         private void ParsePageFromUrlTextBox(IParse parser)
         {
-
-            string firstUrl = URLTextBox.Text;
+            var firstUrl = URLTextBox.Text;
             var nextUrl = firstUrl;
             var countArticles = Convert.ToInt32(PagesCounTextBox.Text);
-
-            progressBar1.Invoke((MethodInvoker)(() => progressBar1.Maximum = countArticles));
-            progressBar1.Invoke((MethodInvoker)(() => progressBar1.Value = 0));
-            MaxPagelabel.Invoke((MethodInvoker)(() => MaxPagelabel.Text = countArticles.ToString()));
-            for (var currentArticle = 1; currentArticle <= countArticles && nextUrl != null; currentArticle++)
+            ChangeControlInMainUi(progressBar1, () => progressBar1.Value = 0);
+            ChangeControlInMainUi(progressBar1, () => progressBar1.Maximum = countArticles);
+            ChangeControlInMainUi(MaxPagelabel, () => MaxPagelabel.Text = countArticles.ToString());
+            for (; progressBar1.Value < countArticles && nextUrl != null; ChangeControlInMainUi(progressBar1, () => progressBar1.Value += 1))
             {
+                ChangeControlInMainUi(CurrentPagelabel, () => CurrentPagelabel.Text = (progressBar1.Value + 1).ToString());
                 var result = parser.ParseSpecificArticle(nextUrl);
-
-                if (countArticles > parser.GetCountArticle(firstUrl))
-                {
-                    countArticles = parser.GetCountArticle(firstUrl);
-                    progressBar1.Invoke((MethodInvoker)(() => progressBar1.Maximum = countArticles));
-                }
-
                 foreach (var item in result)
                 {
-                    ReturnedEmailDataGrid.Invoke((MethodInvoker)(() => ReturnedEmailDataGrid.Rows.Add(item.Fio, item.Email)));
+                    ChangeControlInMainUi(ReturnedEmailDataGrid, () => ReturnedEmailDataGrid.Rows.Add(item.Fio, item.Email));
                 }
                 nextUrl = parser.GetNextArticle(nextUrl);
-                CurrentPagelabel.Invoke((MethodInvoker)(() => CurrentPagelabel.Text = currentArticle.ToString()));
-                progressBar1.Invoke((MethodInvoker)(() => progressBar1.Value = currentArticle));
             }
+        }
 
-
+        private void ChangeControlInMainUi(Control control, Action action)
+        {
+            control.Invoke(action);
         }
 
         private void StartParseButtonClickAsync()
@@ -79,7 +65,7 @@ namespace ViewScopusParser
                 MessageBox.Show(@"При запуске парсера возникла проблема. Вы указали неверный URL.",
                     @"Ошибка соединения!", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
             }
-            catch (Exception ee)
+            catch (Exception)
             {
                 MessageBox.Show(@"При запуске парсера возникла проблема. Попробуйте заново запустить программу.",
                     @"Ошибка запуска!", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
@@ -87,8 +73,8 @@ namespace ViewScopusParser
             finally
             {
                 parser.Dispose();
-                ProgressGroupBox.Invoke((MethodInvoker)(() => ProgressGroupBox.Visible = false));
-                StartParseButton.Invoke((MethodInvoker)(() => StartParseButton.Enabled = true));
+                ChangeControlInMainUi(ProgressGroupBox, () => ProgressGroupBox.Visible = false);
+                ChangeControlInMainUi(StartParseButton, () => StartParseButton.Enabled = true);
             }
 
         }

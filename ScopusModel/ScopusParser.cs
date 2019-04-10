@@ -32,7 +32,7 @@ namespace ScopusModel
                     var fio = RemoveBadSymbols(elementWithFio.Text);
                     emails.Add(new ResultEmail(fio, email));
                 }
-                catch (Exception)
+                catch (NoSuchElementException)
                 {
                     // ignored
                 }
