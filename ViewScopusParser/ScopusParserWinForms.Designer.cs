@@ -36,14 +36,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.StartParseButton = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.CurrentPagelabel = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.MaxPagelabel = new System.Windows.Forms.Label();
             this.CountPagesLabel = new System.Windows.Forms.Label();
             this.PagesCounTextBox = new System.Windows.Forms.TextBox();
             this.ExportExcelButton = new System.Windows.Forms.Button();
             this.ProgressGroupBox = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.PersentLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.ReturnedEmailDataGrid)).BeginInit();
             this.ProgressGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -106,36 +103,9 @@
             // 
             this.progressBar1.Location = new System.Drawing.Point(6, 37);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(426, 23);
+            this.progressBar1.Size = new System.Drawing.Size(413, 23);
             this.progressBar1.Step = 1;
             this.progressBar1.TabIndex = 4;
-            // 
-            // CurrentPagelabel
-            // 
-            this.CurrentPagelabel.AutoSize = true;
-            this.CurrentPagelabel.Location = new System.Drawing.Point(69, 18);
-            this.CurrentPagelabel.Name = "CurrentPagelabel";
-            this.CurrentPagelabel.Size = new System.Drawing.Size(13, 13);
-            this.CurrentPagelabel.TabIndex = 5;
-            this.CurrentPagelabel.Text = "0";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(79, 18);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(56, 13);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "статья из";
-            // 
-            // MaxPagelabel
-            // 
-            this.MaxPagelabel.AutoSize = true;
-            this.MaxPagelabel.Location = new System.Drawing.Point(132, 18);
-            this.MaxPagelabel.Name = "MaxPagelabel";
-            this.MaxPagelabel.Size = new System.Drawing.Size(13, 13);
-            this.MaxPagelabel.TabIndex = 7;
-            this.MaxPagelabel.Text = "0";
             // 
             // CountPagesLabel
             // 
@@ -167,11 +137,8 @@
             // 
             // ProgressGroupBox
             // 
-            this.ProgressGroupBox.Controls.Add(this.label2);
+            this.ProgressGroupBox.Controls.Add(this.PersentLabel);
             this.ProgressGroupBox.Controls.Add(this.progressBar1);
-            this.ProgressGroupBox.Controls.Add(this.CurrentPagelabel);
-            this.ProgressGroupBox.Controls.Add(this.label3);
-            this.ProgressGroupBox.Controls.Add(this.MaxPagelabel);
             this.ProgressGroupBox.Location = new System.Drawing.Point(12, 277);
             this.ProgressGroupBox.Name = "ProgressGroupBox";
             this.ProgressGroupBox.Size = new System.Drawing.Size(425, 66);
@@ -179,14 +146,14 @@
             this.ProgressGroupBox.TabStop = false;
             this.ProgressGroupBox.Visible = false;
             // 
-            // label2
+            // PersentLabel
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(7, 18);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(56, 13);
-            this.label2.TabIndex = 8;
-            this.label2.Text = "Парсится";
+            this.PersentLabel.AutoSize = true;
+            this.PersentLabel.Location = new System.Drawing.Point(189, 21);
+            this.PersentLabel.Name = "PersentLabel";
+            this.PersentLabel.Size = new System.Drawing.Size(21, 13);
+            this.PersentLabel.TabIndex = 9;
+            this.PersentLabel.Text = "0%";
             // 
             // ScopusParserWinForms
             // 
@@ -218,16 +185,13 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button StartParseButton;
         private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.Label CurrentPagelabel;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label MaxPagelabel;
         private System.Windows.Forms.Label CountPagesLabel;
         private System.Windows.Forms.TextBox PagesCounTextBox;
         private System.Windows.Forms.Button ExportExcelButton;
         private System.Windows.Forms.DataGridViewTextBoxColumn FIOColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn EmailColumn;
         private System.Windows.Forms.GroupBox ProgressGroupBox;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label PersentLabel;
     }
 }
 

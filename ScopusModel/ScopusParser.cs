@@ -1,7 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Edge;
+using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.IE;
+using OpenQA.Selenium.Opera;
+using OpenQA.Selenium.Safari;
 
 namespace ScopusModel
 {
@@ -10,11 +18,10 @@ namespace ScopusModel
         private readonly IWebDriver _driver;
 
 
-        public ScopusParser(IWebDriver driver)
+        public ScopusParser(SupportedSeleniumBrowsers browser)
         {
-            _driver = driver;
+            _driver = CreateIWebDriverFabricMethod(browser);
         }
-
 
         public List<ResultEmail> ParseSpecificArticle(string url)
         {
@@ -82,6 +89,37 @@ namespace ScopusModel
         public void Dispose()
         {
             _driver?.Dispose();
+        }
+
+        private IWebDriver CreateIWebDriverFabricMethod(SupportedSeleniumBrowsers webDriver)
+        {
+            IWebDriver driver;
+            var driverDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            switch (webDriver)
+            {
+                case SupportedSeleniumBrowsers.Chrome:
+                    driver = new ChromeDriver(driverDirectory);
+                    break;
+                case SupportedSeleniumBrowsers.FireFox:
+                    driver = new FirefoxDriver(driverDirectory);
+                    break;
+                case SupportedSeleniumBrowsers.Opera:
+                    driver = new OperaDriver(driverDirectory);
+                    break;
+                case SupportedSeleniumBrowsers.Safari:
+                    driver = new SafariDriver(driverDirectory);
+                    break;
+                case SupportedSeleniumBrowsers.Edge:
+                    driver = new EdgeDriver(driverDirectory);
+                    break;
+                case SupportedSeleniumBrowsers.IE:
+                    driver = new InternetExplorerDriver(driverDirectory);
+                    break;
+                default:
+                    driver = null;
+                    break;
+            }
+            return driver;
         }
 
         private string RemoveBadSymbols(string rawString)

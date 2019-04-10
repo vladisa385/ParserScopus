@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Windows.Forms;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using ScopusModel;
 using Microsoft.Office.Interop.Excel;
-using System.IO;
-using System.Reflection;
 using System.Threading;
+using OpenQA.Selenium;
 using Action = System.Action;
 using TextBox = System.Windows.Forms.TextBox;
 
@@ -26,10 +23,9 @@ namespace ViewScopusParser
             var countArticles = Convert.ToInt32(PagesCounTextBox.Text);
             ChangeControlInMainUi(progressBar1, () => progressBar1.Value = 0);
             ChangeControlInMainUi(progressBar1, () => progressBar1.Maximum = countArticles);
-            ChangeControlInMainUi(MaxPagelabel, () => MaxPagelabel.Text = countArticles.ToString());
             for (; progressBar1.Value < countArticles && nextUrl != null; ChangeControlInMainUi(progressBar1, () => progressBar1.Value += 1))
             {
-                ChangeControlInMainUi(CurrentPagelabel, () => CurrentPagelabel.Text = (progressBar1.Value + 1).ToString());
+                ChangeControlInMainUi(PersentLabel, () => PersentLabel.Text = (progressBar1.Value) * 100 / progressBar1.Maximum + @"%");
                 var result = parser.ParseSpecificArticle(nextUrl);
                 foreach (var item in result)
                 {
@@ -46,14 +42,18 @@ namespace ViewScopusParser
 
         private void StartParseButtonClickAsync()
         {
-
-            var driver = CreateIWebDriverFabricMethod();
-            IParse parser = new ScopusParser(driver);
+            IParse parser = null;
             try
             {
+                parser = new ScopusParser(SupportedSeleniumBrowsers.Chrome);
                 ParsePageFromUrlTextBox(parser);
             }
+            catch (DriverServiceNotFoundException)
+            {
+                MessageBox.Show(@"При запуске парсера возникла проблема.У вас отсутствует выбранный браузер, попробуйте другой",
+                    @"Ошибка соединения!", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
 
+            }
             catch (NoSuchElementException)
             {
                 MessageBox.Show(@"Проверьте Ваше интернет-соединение. Возможно, вы забыли подключить VPN или указали неверную ссылку.",
@@ -72,7 +72,7 @@ namespace ViewScopusParser
             }
             finally
             {
-                parser.Dispose();
+                parser?.Dispose();
                 ChangeControlInMainUi(ProgressGroupBox, () => ProgressGroupBox.Visible = false);
                 ChangeControlInMainUi(StartParseButton, () => StartParseButton.Enabled = true);
             }
@@ -133,12 +133,6 @@ namespace ViewScopusParser
             {
                 e.Handled = true;
             }
-        }
-
-        private IWebDriver CreateIWebDriverFabricMethod()
-        {
-            IWebDriver driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-            return driver;
         }
 
         private void StartParseButton_Click(object sender, EventArgs e)
