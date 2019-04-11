@@ -164,7 +164,10 @@ namespace ViewScopusParser
 
         private void ReturnedEmailDataGrid_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
-            if (_persons.Count - _countForAutoSave < Properties.Settings.Default.AutoSaveStep)
+            Console.WriteLine(progressBar1.Value - _countForAutoSave);
+            Console.WriteLine(Properties.Settings.Default.AutoSaveStep);
+            Console.WriteLine(progressBar1.Value - _countForAutoSave < Properties.Settings.Default.AutoSaveStep);
+            if (progressBar1.Value - _countForAutoSave < Properties.Settings.Default.AutoSaveStep)
                 return;
             _countForAutoSave = _countForAutoSave += (int)Properties.Settings.Default.AutoSaveStep;
             switch (AutoSaveComboBox.SelectedIndex)
