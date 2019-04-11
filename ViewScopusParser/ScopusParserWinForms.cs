@@ -37,6 +37,7 @@ namespace ViewScopusParser
             {
                 ChangeControlInMainUi(PersentLabel, () => PersentLabel.Text = $@"Парсится {progressBar1.Value} статья из {progressBar1.Maximum}({(progressBar1.Value) * 100 / progressBar1.Maximum}%)");
                 var result = parser.ParseSpecificArticle(nextUrl);
+                ChangeControlInMainUi(URLTextBox, () => URLTextBox.Text = nextUrl);
                 if (result != null)
                 {
                     _persons.AddRange(result);
@@ -45,10 +46,7 @@ namespace ViewScopusParser
                         ChangeControlInMainUi(ReturnedEmailDataGrid, () => ReturnedEmailDataGrid.Rows.Add(item.Fio, item.Email));
                     }
                 }
-
                 nextUrl = parser.GetNextArticle(nextUrl);
-                var url = nextUrl;
-                ChangeControlInMainUi(URLTextBox, () => URLTextBox.Text = url);
             }
         }
 
