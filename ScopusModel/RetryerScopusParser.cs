@@ -33,27 +33,29 @@ namespace ScopusModel
             return InvokeMethodWithCountAttempts(_parser.GetNextArticle, url);
         }
 
-        public List<ResultEmail> ParseSpecificArticle(string url)
+        public List<Person> ParseSpecificArticle(string url)
         {
             Thread.Sleep((int)_miliSecondForSleeping);
             return InvokeMethodWithCountAttempts(_parser.ParseSpecificArticle, url);
         }
 
-        private TOUTPUT InvokeMethodWithCountAttempts<TPARAMETR, TOUTPUT>(Func<TPARAMETR, TOUTPUT> func, TPARAMETR delegateParam)
+        private TOutput InvokeMethodWithCountAttempts<TParam, TOutput>(Func<TParam, TOutput> func,
+            TParam delegateParam)
         {
-            var localCountAttemops = 0;
-            TOUTPUT result = default(TOUTPUT);
-            try
+            var localCountAttempts = 0;
+            while (true)
             {
-                result = func(delegateParam);
+                try
+                {
+                    return func(delegateParam);
+                }
+                catch (Exception)
+                {
+                    localCountAttempts += 1;
+                    if (localCountAttempts == _countAttempts)
+                        throw;
+                }
             }
-            catch (Exception e)
-            {
-                localCountAttemops += 1;
-                if (localCountAttemops == _countAttempts)
-                    throw e;
-            }
-            return result;
         }
 
     }

@@ -5,7 +5,7 @@ namespace ScopusModel
 {
     public interface IParse : IDisposable
     {
-        List<ResultEmail> ParseSpecificArticle(string url);
+        List<Person> ParseSpecificArticle(string url);
 
         string GetNextArticle(string url);
 

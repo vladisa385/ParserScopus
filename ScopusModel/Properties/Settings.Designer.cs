@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ViewScopusParser.Properties {
+namespace ScopusModel.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -25,25 +25,49 @@ namespace ViewScopusParser.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5")]
-        public uint AutoSaveStep {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Login {
             get {
-                return ((uint)(this["AutoSaveStep"]));
+                return ((string)(this["Login"]));
             }
             set {
-                this["AutoSaveStep"] = value;
+                this["Login"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("3")]
-        public uint CountAttempt {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Password {
             get {
-                return ((uint)(this["CountAttempt"]));
+                return ((string)(this["Password"]));
             }
             set {
-                this["CountAttempt"] = value;
+                this["Password"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsUseProxy {
+            get {
+                return ((bool)(this["IsUseProxy"]));
+            }
+            set {
+                this["IsUseProxy"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsUseLoginAndPassword {
+            get {
+                return ((bool)(this["IsUseLoginAndPassword"]));
+            }
+            set {
+                this["IsUseLoginAndPassword"] = value;
             }
         }
     }

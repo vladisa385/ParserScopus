@@ -56,6 +56,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LogSaver\ExcelLogSaver.cs" />
+    <Compile Include="LogSaver\ILogSave.cs" />
+    <Compile Include="LogSaver\TxtLogSaver.cs" />
     <Compile Include="ScopusParserWinForms.cs">
       <SubType>Form</SubType>
     </Compile>

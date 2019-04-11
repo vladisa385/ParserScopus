@@ -23,11 +23,11 @@ namespace ScopusModel
             _driver = CreateIWebDriverFabricMethod(browser);
         }
 
-        public List<ResultEmail> ParseSpecificArticle(string url)
+        public List<Person> ParseSpecificArticle(string url)
         {
             _driver.Navigate().GoToUrl(url);
             IWebElement authorsList = _driver.FindElement(By.Id("authorlist"));
-            var emails = new List<ResultEmail>();
+            var emails = new List<Person>();
             foreach (var element in authorsList.FindElements(By.TagName("li")))
             {
 
@@ -37,7 +37,7 @@ namespace ScopusModel
                     var email = elementWithEmail.GetAttribute("href").Substring(7);
                     var elementWithFio = element.FindElement(By.ClassName("anchorText"));
                     var fio = RemoveBadSymbols(elementWithFio.Text);
-                    emails.Add(new ResultEmail(fio, email));
+                    emails.Add(new Person(fio, email));
                 }
                 catch (NoSuchElementException)
                 {
@@ -98,7 +98,21 @@ namespace ScopusModel
             switch (webDriver)
             {
                 case SupportedSeleniumBrowsers.Chrome:
-                    driver = new ChromeDriver(driverDirectory);
+                    var options = new ChromeOptions();
+                    if (Properties.Settings.Default.IsUseProxy)
+                    {
+                        var proxy = new Proxy()
+                        {
+                            Kind = ProxyKind.System
+                        };
+                        options.Proxy = proxy;
+                        if (Properties.Settings.Default.IsUseLoginAndPassword)
+                        {
+                            proxy.SocksUserName = Properties.Settings.Default.Login;
+                            proxy.SocksPassword = Properties.Settings.Default.Password;
+                        }
+                    }
+                    driver = new ChromeDriver(driverDirectory, options);
                     break;
                 case SupportedSeleniumBrowsers.FireFox:
                     driver = new FirefoxDriver(driverDirectory);
