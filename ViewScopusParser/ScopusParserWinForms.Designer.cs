@@ -41,6 +41,8 @@
             this.ExportExcelButton = new System.Windows.Forms.Button();
             this.ProgressGroupBox = new System.Windows.Forms.GroupBox();
             this.PersentLabel = new System.Windows.Forms.Label();
+            this.ExportToTXTbutton = new System.Windows.Forms.Button();
+            this.ExportEmailcheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.ReturnedEmailDataGrid)).BeginInit();
             this.ProgressGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -52,7 +54,7 @@
             this.ReturnedEmailDataGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.FIOColumn,
             this.EmailColumn});
-            this.ReturnedEmailDataGrid.Location = new System.Drawing.Point(12, 87);
+            this.ReturnedEmailDataGrid.Location = new System.Drawing.Point(12, 102);
             this.ReturnedEmailDataGrid.Name = "ReturnedEmailDataGrid";
             this.ReturnedEmailDataGrid.ReadOnly = true;
             this.ReturnedEmailDataGrid.Size = new System.Drawing.Size(426, 191);
@@ -91,9 +93,9 @@
             // 
             // StartParseButton
             // 
-            this.StartParseButton.Location = new System.Drawing.Point(363, 19);
+            this.StartParseButton.Location = new System.Drawing.Point(337, 20);
             this.StartParseButton.Name = "StartParseButton";
-            this.StartParseButton.Size = new System.Drawing.Size(75, 23);
+            this.StartParseButton.Size = new System.Drawing.Size(100, 23);
             this.StartParseButton.TabIndex = 3;
             this.StartParseButton.Text = "Начать";
             this.StartParseButton.UseVisualStyleBackColor = true;
@@ -127,7 +129,7 @@
             // 
             // ExportExcelButton
             // 
-            this.ExportExcelButton.Location = new System.Drawing.Point(337, 51);
+            this.ExportExcelButton.Location = new System.Drawing.Point(337, 73);
             this.ExportExcelButton.Name = "ExportExcelButton";
             this.ExportExcelButton.Size = new System.Drawing.Size(101, 23);
             this.ExportExcelButton.TabIndex = 10;
@@ -139,7 +141,7 @@
             // 
             this.ProgressGroupBox.Controls.Add(this.PersentLabel);
             this.ProgressGroupBox.Controls.Add(this.progressBar1);
-            this.ProgressGroupBox.Location = new System.Drawing.Point(12, 277);
+            this.ProgressGroupBox.Location = new System.Drawing.Point(12, 292);
             this.ProgressGroupBox.Name = "ProgressGroupBox";
             this.ProgressGroupBox.Size = new System.Drawing.Size(425, 66);
             this.ProgressGroupBox.TabIndex = 11;
@@ -155,11 +157,33 @@
             this.PersentLabel.TabIndex = 9;
             this.PersentLabel.Text = "0%";
             // 
+            // ExportToTXTbutton
+            // 
+            this.ExportToTXTbutton.Location = new System.Drawing.Point(12, 73);
+            this.ExportToTXTbutton.Name = "ExportToTXTbutton";
+            this.ExportToTXTbutton.Size = new System.Drawing.Size(87, 23);
+            this.ExportToTXTbutton.TabIndex = 12;
+            this.ExportToTXTbutton.Text = "Экспорт в txt";
+            this.ExportToTXTbutton.UseVisualStyleBackColor = true;
+            this.ExportToTXTbutton.Click += new System.EventHandler(this.ExportToTXTbutton_Click);
+            // 
+            // ExportEmailcheckBox
+            // 
+            this.ExportEmailcheckBox.AutoSize = true;
+            this.ExportEmailcheckBox.Location = new System.Drawing.Point(106, 78);
+            this.ExportEmailcheckBox.Name = "ExportEmailcheckBox";
+            this.ExportEmailcheckBox.Size = new System.Drawing.Size(91, 17);
+            this.ExportEmailcheckBox.TabIndex = 13;
+            this.ExportEmailcheckBox.Text = "Только Email";
+            this.ExportEmailcheckBox.UseVisualStyleBackColor = true;
+            // 
             // ScopusParserWinForms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(452, 355);
+            this.ClientSize = new System.Drawing.Size(449, 364);
+            this.Controls.Add(this.ExportEmailcheckBox);
+            this.Controls.Add(this.ExportToTXTbutton);
             this.Controls.Add(this.ProgressGroupBox);
             this.Controls.Add(this.ExportExcelButton);
             this.Controls.Add(this.PagesCounTextBox);
@@ -192,6 +216,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn EmailColumn;
         private System.Windows.Forms.GroupBox ProgressGroupBox;
         private System.Windows.Forms.Label PersentLabel;
+        private System.Windows.Forms.Button ExportToTXTbutton;
+        private System.Windows.Forms.CheckBox ExportEmailcheckBox;
     }
 }
 

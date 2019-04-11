@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using ScopusModel;
 using Microsoft.Office.Interop.Excel;
@@ -75,6 +78,8 @@ namespace ViewScopusParser
                 parser?.Dispose();
                 ChangeControlInMainUi(ProgressGroupBox, () => ProgressGroupBox.Visible = false);
                 ChangeControlInMainUi(StartParseButton, () => StartParseButton.Enabled = true);
+                ChangeControlInMainUi(StartParseButton, () => ExportExcelButton.Enabled = true);
+                ChangeControlInMainUi(StartParseButton, () => ExportToTXTbutton.Enabled = true);
             }
 
         }
@@ -139,9 +144,63 @@ namespace ViewScopusParser
         {
             ProgressGroupBox.Visible = true;
             StartParseButton.Enabled = false;
+            ExportExcelButton.Enabled = false;
+            ExportToTXTbutton.Enabled = false;
             ReturnedEmailDataGrid.Rows.Clear();
             Thread thread = new Thread(StartParseButtonClickAsync);
             thread.Start();
+        }
+
+        private void ExportToTXTbutton_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Текстовый документ (*.txt)|*.txt|Все файлы (*.*)|*.*";
+            saveFileDialog.DefaultExt = "*.txt";
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                StreamWriter sw = new StreamWriter(saveFileDialog.FileName, false, Encoding.Unicode);
+                try
+                {                   
+                    List<int> col_n = new List<int>();
+                    foreach (DataGridViewColumn col in ReturnedEmailDataGrid.Columns)
+                        if (col.Visible)
+                        {
+                            //sw.Write(col.HeaderText + "\t");
+                            col_n.Add(col.Index);
+                        }
+                    //sw.WriteLine();
+                    int x = ReturnedEmailDataGrid.RowCount;
+                    if (ReturnedEmailDataGrid.AllowUserToAddRows) x--;
+
+                    if (ExportEmailcheckBox.Checked)
+                    {
+                        for (int i = 0; i < x; i++)
+                        {                            
+                            sw.Write(ReturnedEmailDataGrid[col_n[1], i].Value + "\t");
+                            sw.Write(" \r\n");
+                        }
+                    }
+
+                    else
+                    {
+                        for (int i = 0; i < x; i++)
+                        {
+                            for (int y = 0; y < col_n.Count; y++)
+                                sw.Write(ReturnedEmailDataGrid[col_n[y], i].Value + "\t");
+                            sw.Write(" \r\n");
+                        }
+                    }
+
+                    
+                    sw.Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+
+                }
+            }
         }
     }
 }
