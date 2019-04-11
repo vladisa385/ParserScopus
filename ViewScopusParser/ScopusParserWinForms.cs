@@ -48,7 +48,7 @@ namespace ViewScopusParser
             IParse parser = null;
             try
             {
-                parser = new ScopusParser(SupportedSeleniumBrowsers.Chrome);
+                parser = new SleepRetryerScopusParser(new ScopusParser(SupportedSeleniumBrowsers.Chrome), 3, 1500);
                 ParsePageFromUrlTextBox(parser);
             }
             catch (DriverServiceNotFoundException)
