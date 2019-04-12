@@ -1,4 +1,4 @@
-﻿namespace ScopusModel
+﻿namespace ParserModel
 {
     public class Person
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ScopusModel
+namespace ParserModel
 {
     public interface IParse : IDisposable
     {

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ScopusModel;
+using ParserModel;
 
 namespace ViewScopusParser.LogSaver
 {

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Windows.Forms;
-using ScopusModel;
+
 using System.Threading;
 using OpenQA.Selenium;
+using ParserModel;
+using ScopusParser;
 using ViewScopusParser.LogSaver;
 using Action = System.Action;
 using TextBox = System.Windows.Forms.TextBox;
@@ -62,8 +63,9 @@ namespace ViewScopusParser
             {
                 uint delay = uint.Parse(delayTextBox.Text) * 1000;
                 uint countAttempts = Properties.Settings.Default.CountAttempt;
-                var baseParser = new ScopusParser(SupportedSeleniumBrowsers.Chrome);
-                parser = new SleepRetryerScopusParser(baseParser, countAttempts, delay);
+                var baseParser = new ScopusParser.ScopusParser(SupportedSeleniumBrowsers.Chrome);
+                var loggerParser = new LoggerParser(baseParser);
+                parser = new SleepRetryerParser(loggerParser, countAttempts, delay);
                 ParsePageFromUrlTextBox(parser);
             }
             catch (DriverServiceNotFoundException)

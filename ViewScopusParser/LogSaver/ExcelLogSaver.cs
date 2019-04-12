@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Microsoft.Office.Interop.Excel;
-using ScopusModel;
+using ParserModel;
 using Application = Microsoft.Office.Interop.Excel.Application;
 
 namespace ViewScopusParser.LogSaver

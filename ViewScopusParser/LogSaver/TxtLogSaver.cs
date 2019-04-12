@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using ScopusModel;
+using ParserModel;
 
 namespace ViewScopusParser.LogSaver
 {

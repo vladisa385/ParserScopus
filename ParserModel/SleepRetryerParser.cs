@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace ScopusModel
+namespace ParserModel
 {
-    public class SleepRetryerScopusParser : IParse
+    public class SleepRetryerParser : IParse
     {
         private readonly IParse _parser;
         private readonly uint _countAttempts;
         private readonly uint _miliSecondForSleeping;
-        public SleepRetryerScopusParser(IParse parser, uint countAttempts, uint miliSecondForSleeping)
+        public SleepRetryerParser(IParse parser, uint countAttempts, uint miliSecondForSleeping)
         {
             _parser = parser;
             _countAttempts = countAttempts;
