@@ -18,7 +18,7 @@ namespace ParserModel
 
         public void Dispose()
         {
-            _parser.Dispose();
+            //_parser.Dispose();
         }
 
         public int GetCountArticle(string url)
@@ -29,13 +29,31 @@ namespace ParserModel
 
         public string GetNextArticle(string url)
         {
-            Thread.Sleep((int)_miliSecondForSleeping);
-            return InvokeMethodWithCountAttempts(_parser.GetNextArticle, url);
+            var localCountAttempts = 0;
+            string result = null;
+            while (localCountAttempts < _countAttempts)
+            {
+                try
+                {
+                    Thread.Sleep((int)(_miliSecondForSleeping + 1000 * localCountAttempts));
+                    result = _parser.GetNextArticle(url);
+                    if (result != null)
+                        return result;
+                    localCountAttempts += 1;
+                }
+                catch (Exception)
+                {
+                    localCountAttempts += 1;
+                    if (localCountAttempts == _countAttempts)
+                        throw;
+                }
+            }
+
+            return result;
         }
 
         public List<Person> ParseSpecificArticle(string url)
         {
-            Thread.Sleep((int)_miliSecondForSleeping);
             return InvokeMethodWithCountAttempts(_parser.ParseSpecificArticle, url);
         }
 
@@ -47,6 +65,7 @@ namespace ParserModel
             {
                 try
                 {
+                    Thread.Sleep((int)(_miliSecondForSleeping + 1000 * localCountAttempts));
                     return func(delegateParam);
                 }
                 catch (Exception)

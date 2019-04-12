@@ -28,10 +28,12 @@ namespace ScopusParser
         {
             _driver.Navigate().GoToUrl(url);
             IWebElement authorsList = _driver.FindElement(By.Id("authorlist"));
+            var countEmails = _driver.FindElements(By.ClassName("correspondenceEmail")).Count;
             var emails = new List<Person>();
             foreach (var element in authorsList.FindElements(By.TagName("li")))
             {
-
+                if (emails.Count == countEmails)
+                    break;
                 try
                 {
                     var elementWithEmail = element.FindElement(By.ClassName("correspondenceEmail"));
