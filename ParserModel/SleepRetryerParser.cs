@@ -18,7 +18,7 @@ namespace ParserModel
 
         public void Dispose()
         {
-            //_parser.Dispose();
+            _parser.Dispose();
         }
 
         public int GetCountArticle(string url)
@@ -57,8 +57,7 @@ namespace ParserModel
             return InvokeMethodWithCountAttempts(_parser.ParseSpecificArticle, url);
         }
 
-        private TOutput InvokeMethodWithCountAttempts<TParam, TOutput>(Func<TParam, TOutput> func,
-            TParam delegateParam)
+        private TOutput InvokeMethodWithCountAttempts<TParam, TOutput>(Func<TParam, TOutput> func, TParam delegateParam)
         {
             var localCountAttempts = 0;
             while (true)

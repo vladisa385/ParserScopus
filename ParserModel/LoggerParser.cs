@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ParserModel
 {
@@ -11,17 +8,15 @@ namespace ParserModel
     {
         private readonly IParse _parser;
         private readonly string _pathToLog;
+
         public LoggerParser(IParse parser)
         {
             _parser = parser;
-            string rootPath = Directory.GetCurrentDirectory();
-            rootPath += "\\Logs.txt";
-            if (!File.Exists(rootPath))
-            {
-                File.CreateText(rootPath);
-            }
+            string rootPath = Directory.GetCurrentDirectory() + "\\Logs.txt";
+            InvokeFuncWithLogException(u => !File.Exists(u) ? File.CreateText(u) : null, rootPath);
             _pathToLog = rootPath;
         }
+
         public void Dispose()
         {
             LogWithDate("[Dispose] Начинаем выполнение");
@@ -32,7 +27,7 @@ namespace ParserModel
         public List<Person> ParseSpecificArticle(string url)
         {
             LogWithDate($"[ParseSpecificArticle] Начинаем выполнение для {url}");
-            var res = _parser.ParseSpecificArticle(url);
+            var res = InvokeFuncWithLogException(_parser.ParseSpecificArticle, url);
             LogWithDate($"[ParseSpecificArticle] Успешно выполнили и вернули  {res.Count} имейлов");
             return res;
         }
@@ -40,18 +35,17 @@ namespace ParserModel
         public string GetNextArticle(string url)
         {
             LogWithDate("[GetNextArticle] Начинаем выполнение");
-            var res = _parser.GetNextArticle(url);
-            if (res != null)
-                LogWithDate($"[GetNextArticle] Успешно выполнили и вернули {url})");
-            else
-                LogWithDate("[GetNextArticle] Успешно выполнили но следующую статью не вернули");
+            var res = InvokeFuncWithLogException(_parser.GetNextArticle, url);
+            LogWithDate(res != null
+                ? $"[GetNextArticle] Успешно выполнили и вернули {url})"
+                : "[GetNextArticle] Успешно выполнили, но следующую статью не вернули");
             return res;
         }
 
         public int GetCountArticle(string url)
         {
             LogWithDate("[GetCountArticle] Начинаем выполнение");
-            var res = _parser.GetCountArticle(url);
+            var res = InvokeFuncWithLogException(_parser.GetCountArticle, url);
             LogWithDate($"[GetCountArticle] Успешно выполнили и вернули  {res} количество");
             return res;
         }
@@ -71,5 +65,20 @@ namespace ParserModel
                 // ignored
             }
         }
+
+        private TOutput InvokeFuncWithLogException<TParam, TOutput>(Func<TParam, TOutput> func, TParam delegateParam)
+        {
+
+            try
+            {
+                return func(delegateParam);
+            }
+            catch (Exception e)
+            {
+                LogWithDate(e.Message);
+            }
+            return func(delegateParam);
+        }
+
     }
 }

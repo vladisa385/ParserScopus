@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewScopusParser", "ViewSco
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParserModel", "ParserModel\ParserModel.csproj", "{58E7F6F9-8704-4D7B-8B1F-2338ADB1F8A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScopusParser", "ScopusParser\ScopusParser.csproj", "{ACD5AFC7-9138-4803-B069-57802352DC1A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScopusParserImplementation", "ScopusParser\ScopusParserImplementation.csproj", "{ACD5AFC7-9138-4803-B069-57802352DC1A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

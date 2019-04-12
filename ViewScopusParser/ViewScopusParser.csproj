@@ -99,9 +99,9 @@
       <Project>{58e7f6f9-8704-4d7b-8b1f-2338adb1f8a0}</Project>
       <Name>ParserModel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ScopusParser\ScopusParser.csproj">
+    <ProjectReference Include="..\ScopusParser\ScopusParserImplementation.csproj">
       <Project>{acd5afc7-9138-4803-b069-57802352dc1a}</Project>
-      <Name>ScopusParser</Name>
+      <Name>ScopusParserImplementation</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

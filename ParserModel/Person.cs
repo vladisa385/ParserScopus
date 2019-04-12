@@ -13,9 +13,7 @@
 
         public string ToString(bool isOnlyEmail)
         {
-            if (isOnlyEmail)
-                return $"{Email}";
-            return $"{Fio}  {Email}";
+            return isOnlyEmail ? $"{Email}" : $"{Fio}  {Email}";
         }
 
 
