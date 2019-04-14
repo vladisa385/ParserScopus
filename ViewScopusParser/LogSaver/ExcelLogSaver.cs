@@ -5,7 +5,7 @@ using Microsoft.Office.Interop.Excel;
 using ParserModel;
 using Application = Microsoft.Office.Interop.Excel.Application;
 
-namespace ViewScopusParser.LogSaver
+namespace EmailParserView.LogSaver
 {
     public class ExcelLogSaver : ILogSave
     {

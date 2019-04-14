@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ParserModel;
 
-namespace ViewScopusParser.LogSaver
+namespace EmailParserView.LogSaver
 {
     public interface ILogSave
     {

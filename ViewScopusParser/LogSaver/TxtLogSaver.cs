@@ -2,7 +2,7 @@
 using System.IO;
 using ParserModel;
 
-namespace ViewScopusParser.LogSaver
+namespace EmailParserView.LogSaver
 {
     public class TxtLogSaver : ILogSave
     {

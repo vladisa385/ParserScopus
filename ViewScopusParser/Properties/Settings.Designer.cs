@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ViewScopusParser.Properties {
+namespace EmailParserView.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

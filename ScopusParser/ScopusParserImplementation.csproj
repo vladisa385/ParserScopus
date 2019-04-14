@@ -55,7 +55,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="ScopusParser.cs" />
+    <Compile Include="ScopusParserSettings.cs" />
     <Compile Include="SupportedSeleniumBrowsers.cs" />
+    <Compile Include="TypeOrganization.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ParserModel\ParserModel.csproj">

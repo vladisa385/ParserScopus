@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace ViewScopusParser
+namespace EmailParserView
 {
     static class Program
     {
@@ -13,7 +13,7 @@ namespace ViewScopusParser
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ScopusParserWinForms());
+            Application.Run(new EmailParserWinForms());
         }
     }
 }

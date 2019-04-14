@@ -1,6 +1,6 @@
-﻿namespace ViewScopusParser
+﻿namespace EmailParserView
 {
-    partial class ScopusParserWinForms
+    partial class EmailParserWinForms
     {
         /// <summary>
         /// Обязательная переменная конструктора.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ScopusParserWinForms));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EmailParserWinForms));
             this.ReturnedEmailDataGrid = new System.Windows.Forms.DataGridView();
             this.FIOColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EmailColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -52,6 +52,8 @@
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.IsExportOnlyEmailcheckBox = new System.Windows.Forms.CheckBox();
             this.AutoSaveComboBox = new System.Windows.Forms.ComboBox();
+            this.TypeOrganizationLabel = new System.Windows.Forms.Label();
+            this.TypeOrganizationCombobox = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.ReturnedEmailDataGrid)).BeginInit();
             this.ProgressGroupBox.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -65,7 +67,7 @@
             this.ReturnedEmailDataGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.FIOColumn,
             this.EmailColumn});
-            this.ReturnedEmailDataGrid.Location = new System.Drawing.Point(11, 140);
+            this.ReturnedEmailDataGrid.Location = new System.Drawing.Point(11, 161);
             this.ReturnedEmailDataGrid.Name = "ReturnedEmailDataGrid";
             this.ReturnedEmailDataGrid.ReadOnly = true;
             this.ReturnedEmailDataGrid.Size = new System.Drawing.Size(426, 191);
@@ -90,7 +92,7 @@
             // 
             this.URLTextBox.Location = new System.Drawing.Point(43, 22);
             this.URLTextBox.Name = "URLTextBox";
-            this.URLTextBox.Size = new System.Drawing.Size(288, 20);
+            this.URLTextBox.Size = new System.Drawing.Size(303, 20);
             this.URLTextBox.TabIndex = 1;
             this.URLTextBox.Text = resources.GetString("URLTextBox.Text");
             // 
@@ -105,9 +107,9 @@
             // 
             // StartParseButton
             // 
-            this.StartParseButton.Location = new System.Drawing.Point(337, 20);
+            this.StartParseButton.Location = new System.Drawing.Point(352, 20);
             this.StartParseButton.Name = "StartParseButton";
-            this.StartParseButton.Size = new System.Drawing.Size(100, 23);
+            this.StartParseButton.Size = new System.Drawing.Size(85, 23);
             this.StartParseButton.TabIndex = 3;
             this.StartParseButton.Text = "Начать";
             this.StartParseButton.UseVisualStyleBackColor = true;
@@ -124,7 +126,7 @@
             // CountPagesLabel
             // 
             this.CountPagesLabel.AutoSize = true;
-            this.CountPagesLabel.Location = new System.Drawing.Point(12, 51);
+            this.CountPagesLabel.Location = new System.Drawing.Point(12, 45);
             this.CountPagesLabel.Name = "CountPagesLabel";
             this.CountPagesLabel.Size = new System.Drawing.Size(135, 13);
             this.CountPagesLabel.TabIndex = 8;
@@ -132,9 +134,9 @@
             // 
             // PagesCounTextBox
             // 
-            this.PagesCounTextBox.Location = new System.Drawing.Point(264, 55);
+            this.PagesCounTextBox.Location = new System.Drawing.Point(267, 49);
             this.PagesCounTextBox.Name = "PagesCounTextBox";
-            this.PagesCounTextBox.Size = new System.Drawing.Size(61, 20);
+            this.PagesCounTextBox.Size = new System.Drawing.Size(79, 20);
             this.PagesCounTextBox.TabIndex = 9;
             this.PagesCounTextBox.Text = "1";
             this.PagesCounTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PagesCounTextBox_KeyPress);
@@ -210,9 +212,9 @@
             // 
             // delayTextBox
             // 
-            this.delayTextBox.Location = new System.Drawing.Point(264, 81);
+            this.delayTextBox.Location = new System.Drawing.Point(267, 75);
             this.delayTextBox.Name = "delayTextBox";
-            this.delayTextBox.Size = new System.Drawing.Size(61, 20);
+            this.delayTextBox.Size = new System.Drawing.Size(79, 20);
             this.delayTextBox.TabIndex = 16;
             this.delayTextBox.Text = "0";
             this.delayTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PagesCounTextBox_KeyPress);
@@ -220,7 +222,7 @@
             // Задержка
             // 
             this.Задержка.AutoSize = true;
-            this.Задержка.Location = new System.Drawing.Point(15, 81);
+            this.Задержка.Location = new System.Drawing.Point(12, 75);
             this.Задержка.Name = "Задержка";
             this.Задержка.Size = new System.Drawing.Size(243, 13);
             this.Задержка.TabIndex = 17;
@@ -229,7 +231,7 @@
             // IsExportOnlyEmailcheckBox
             // 
             this.IsExportOnlyEmailcheckBox.AutoSize = true;
-            this.IsExportOnlyEmailcheckBox.Location = new System.Drawing.Point(18, 107);
+            this.IsExportOnlyEmailcheckBox.Location = new System.Drawing.Point(18, 128);
             this.IsExportOnlyEmailcheckBox.Name = "IsExportOnlyEmailcheckBox";
             this.IsExportOnlyEmailcheckBox.Size = new System.Drawing.Size(174, 17);
             this.IsExportOnlyEmailcheckBox.TabIndex = 13;
@@ -240,20 +242,36 @@
             // 
             this.AutoSaveComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.AutoSaveComboBox.FormattingEnabled = true;
-            this.AutoSaveComboBox.Items.AddRange(new object[] {
-            "Автосохранения нет",
-            "Автосохранение в txt",
-            "Автосохранение в excel"});
-            this.AutoSaveComboBox.Location = new System.Drawing.Point(264, 113);
+            this.AutoSaveComboBox.Location = new System.Drawing.Point(264, 134);
             this.AutoSaveComboBox.Name = "AutoSaveComboBox";
             this.AutoSaveComboBox.Size = new System.Drawing.Size(173, 21);
             this.AutoSaveComboBox.TabIndex = 19;
             // 
-            // ScopusParserWinForms
+            // TypeOrganizationLabel
+            // 
+            this.TypeOrganizationLabel.AutoSize = true;
+            this.TypeOrganizationLabel.Location = new System.Drawing.Point(15, 100);
+            this.TypeOrganizationLabel.Name = "TypeOrganizationLabel";
+            this.TypeOrganizationLabel.Size = new System.Drawing.Size(94, 13);
+            this.TypeOrganizationLabel.TabIndex = 20;
+            this.TypeOrganizationLabel.Text = "Тип организации";
+            // 
+            // TypeOrganizationCombobox
+            // 
+            this.TypeOrganizationCombobox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.TypeOrganizationCombobox.FormattingEnabled = true;
+            this.TypeOrganizationCombobox.Location = new System.Drawing.Point(267, 104);
+            this.TypeOrganizationCombobox.Name = "TypeOrganizationCombobox";
+            this.TypeOrganizationCombobox.Size = new System.Drawing.Size(79, 21);
+            this.TypeOrganizationCombobox.TabIndex = 21;
+            // 
+            // EmailParserWinForms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(449, 403);
+            this.Controls.Add(this.TypeOrganizationCombobox);
+            this.Controls.Add(this.TypeOrganizationLabel);
             this.Controls.Add(this.AutoSaveComboBox);
             this.Controls.Add(this.Задержка);
             this.Controls.Add(this.delayTextBox);
@@ -267,7 +285,7 @@
             this.Controls.Add(this.ReturnedEmailDataGrid);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "ScopusParserWinForms";
+            this.Name = "EmailParserWinForms";
             this.Text = "Scopus Parser";
             ((System.ComponentModel.ISupportInitialize)(this.ReturnedEmailDataGrid)).EndInit();
             this.ProgressGroupBox.ResumeLayout(false);
@@ -304,6 +322,8 @@
         private System.Windows.Forms.BindingSource bindingSource1;
         private System.Windows.Forms.CheckBox IsExportOnlyEmailcheckBox;
         private System.Windows.Forms.ComboBox AutoSaveComboBox;
+        private System.Windows.Forms.Label TypeOrganizationLabel;
+        private System.Windows.Forms.ComboBox TypeOrganizationCombobox;
     }
 }
 

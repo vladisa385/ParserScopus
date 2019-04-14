@@ -1,30 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows.Forms;
-
 using System.Threading;
+using System.Windows.Forms;
+using EmailParserView.LogSaver;
 using OpenQA.Selenium;
 using ParserModel;
 using ScopusParser;
-using ViewScopusParser.LogSaver;
 using Action = System.Action;
 using TextBox = System.Windows.Forms.TextBox;
 
-namespace ViewScopusParser
+namespace EmailParserView
 {
-    public partial class ScopusParserWinForms : Form
+    public partial class EmailParserWinForms : Form
     {
         private readonly List<Person> _persons;
         private ILogSave _resultSaver;
         private int _countForAutoSave;
-        public ScopusParserWinForms()
+        public EmailParserWinForms()
         {
             _persons = new List<Person>();
             _resultSaver = new TxtLogSaver();
             _countForAutoSave = 0;
             InitializeComponent();
-            AutoSaveComboBox.SelectedIndex = 0;
+            SeedAllComboboxValuesAndText();
         }
 
         private void ParsePageFromUrlTextBox(IParse parser)
@@ -61,16 +60,13 @@ namespace ViewScopusParser
             IParse parser = null;
             try
             {
-                uint delay = uint.Parse(delayTextBox.Text) * 1000;
-                uint countAttempts = Properties.Settings.Default.CountAttempt;
-                var baseParser = new ScopusParser.ScopusParser(SupportedSeleniumBrowsers.Chrome);
-                var loggerParser = new LoggerParser(baseParser);
-                parser = new SleepRetryerParser(loggerParser, countAttempts, delay);
+                parser = GetParserFabricMethod(ParserType.Scopus);
                 ParsePageFromUrlTextBox(parser);
             }
             catch (DriverServiceNotFoundException)
             {
-                MessageBox.Show(@"При запуске парсера возникла проблема.У вас отсутствует выбранный браузер, попробуйте другой",
+                MessageBox.Show(
+                    @"При запуске парсера возникла проблема.У вас отсутствует выбранный браузер, попробуйте другой",
                     @"Ошибка соединения!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
             }
@@ -109,6 +105,71 @@ namespace ViewScopusParser
 
         }
 
+        private void SeedAllComboboxValuesAndText()
+        {
+            var itemsForTypeOrganization = new System.Collections.Generic.List<ItemComboBox>
+            {
+                new ItemComboBox()
+                {
+                    Text = "Личный ПК",
+                    Value = TypeOrganization.Private
+                },
+                new ItemComboBox()
+                {
+                    Text = "СФУ",
+                    Value = TypeOrganization.SFU
+                },
+                new ItemComboBox()
+                {
+                    Text = "СибГАУ",
+                    Value = TypeOrganization.SibGau
+                }
+            };
+            TypeOrganizationCombobox.Items.AddRange(items: itemsForTypeOrganization.ToArray());
+            TypeOrganizationCombobox.SelectedIndex = 0;
+            var itemsForAutoSaveMode = new System.Collections.Generic.List<ItemComboBox>
+            {
+                new ItemComboBox()
+                {
+                    Text = "Нет автосохранения",
+                    Value = 0
+                },
+                new ItemComboBox()
+                {
+                    Text = "Excel",
+                    Value = 1
+                },
+                new ItemComboBox()
+                {
+                    Text = "Txt",
+                    Value = 2
+                }
+            };
+            AutoSaveComboBox.Items.AddRange(items: itemsForAutoSaveMode.ToArray());
+            AutoSaveComboBox.SelectedIndex = 0;
+
+        }
+
+        private IParse GetParserFabricMethod(ParserType type)
+        {
+            IParse baseParser = null;
+            TypeOrganization typeOrganization = (TypeOrganization)(TypeOrganizationCombobox.SelectedItem as ItemComboBox)?.Value;
+            switch (type)
+            {
+                case ParserType.Scopus:
+
+                    var settings = new ScopusParserSettings(SupportedSeleniumBrowsers.Chrome, typeOrganization);
+                    baseParser = new ScopusParser.ScopusParser(settings);
+                    break;
+                case ParserType.WebOfSciense:
+                    break;
+            }
+            var delay = uint.Parse(delayTextBox.Text) * 1000;
+            var countAttempts = Properties.Settings.Default.CountAttempt;
+            var loggerParser = new LoggerParser(baseParser);
+            baseParser = new SleepRetryerParser(loggerParser, countAttempts, delay);
+            return baseParser;
+        }
 
         private void PagesCounTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -117,8 +178,6 @@ namespace ViewScopusParser
             {
                 e.Handled = true;
             }
-
-            // only allow one decimal point
             if (e.KeyChar == '.' && ((TextBox)sender).Text.IndexOf('.') > -1)
             {
                 e.Handled = true;
@@ -178,7 +237,7 @@ namespace ViewScopusParser
             if (progressBar1.Value - _countForAutoSave < Properties.Settings.Default.AutoSaveStep)
                 return;
             _countForAutoSave = _countForAutoSave += (int)Properties.Settings.Default.AutoSaveStep;
-            switch (AutoSaveComboBox.SelectedIndex)
+            switch ((AutoSaveComboBox.SelectedItem as ItemComboBox)?.Value)
             {
                 case 0:
                     return;

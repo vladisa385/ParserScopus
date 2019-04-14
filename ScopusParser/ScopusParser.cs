@@ -19,9 +19,9 @@ namespace ScopusParser
         private readonly IWebDriver _driver;
 
 
-        public ScopusParser(SupportedSeleniumBrowsers browser)
+        public ScopusParser(ScopusParserSettings settings)
         {
-            _driver = CreateIWebDriverFabricMethod(browser);
+            _driver = CreateIWebDriverFabricMethod(settings);
         }
 
         public List<Person> ParseSpecificArticle(string url)
@@ -94,43 +94,38 @@ namespace ScopusParser
             _driver?.Dispose();
         }
 
-        private IWebDriver CreateIWebDriverFabricMethod(SupportedSeleniumBrowsers webDriver)
+        private IWebDriver CreateIWebDriverFabricMethod(ScopusParserSettings settings)
         {
             IWebDriver driver;
             var driverDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            switch (webDriver)
+            switch (settings.Browser)
             {
                 case SupportedSeleniumBrowsers.Chrome:
                     var options = new ChromeOptions();
-                    if (Properties.Settings.Default.IsUseProxy)
+                    Proxy proxy = null;
+                    switch (settings.TypeOrganization)
                     {
-                        var proxy = new Proxy()
-                        {
-                            Kind = ProxyKind.System
-                        };
-                        options.Proxy = proxy;
-                        if (Properties.Settings.Default.IsUseLoginAndPassword)
-                        {
+                        case TypeOrganization.Private:
+                            proxy = new Proxy
+                            {
+                                Kind = ProxyKind.System
+                            };
+                            break;
+                        case TypeOrganization.SFU:
+                            proxy = new Proxy
+                            {
+                                Kind = ProxyKind.System
+                            };
+                            break;
+                        case TypeOrganization.SibGau:
+                            proxy = new Proxy();
                             proxy.SocksUserName = Properties.Settings.Default.Login;
                             proxy.SocksPassword = Properties.Settings.Default.Password;
-                        }
+                            break;
+
                     }
+                    options.Proxy = proxy;
                     driver = new ChromeDriver(driverDirectory, options);
-                    break;
-                case SupportedSeleniumBrowsers.FireFox:
-                    driver = new FirefoxDriver(driverDirectory);
-                    break;
-                case SupportedSeleniumBrowsers.Opera:
-                    driver = new OperaDriver(driverDirectory);
-                    break;
-                case SupportedSeleniumBrowsers.Safari:
-                    driver = new SafariDriver(driverDirectory);
-                    break;
-                case SupportedSeleniumBrowsers.Edge:
-                    driver = new EdgeDriver(driverDirectory);
-                    break;
-                case SupportedSeleniumBrowsers.IE:
-                    driver = new InternetExplorerDriver(driverDirectory);
                     break;
                 default:
                     driver = null;
