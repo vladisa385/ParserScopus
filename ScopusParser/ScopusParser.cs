@@ -118,9 +118,10 @@ namespace ScopusParser
                             };
                             break;
                         case TypeOrganization.SibGau:
-                            proxy = new Proxy();
-                            proxy.SocksUserName = Properties.Settings.Default.Login;
-                            proxy.SocksPassword = Properties.Settings.Default.Password;
+                            proxy = new Proxy
+                            {
+                                Kind = ProxyKind.System
+                            };
                             break;
 
                     }

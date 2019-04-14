@@ -24,6 +24,7 @@ namespace EmailParserView
             _countForAutoSave = 0;
             InitializeComponent();
             SeedAllComboboxValuesAndText();
+
         }
 
         private void ParsePageFromUrlTextBox(IParse parser)
@@ -55,19 +56,21 @@ namespace EmailParserView
             control.Invoke(action);
         }
 
-        private void StartParseButtonClickAsync()
+        private void StartParseButtonClickAsync(TypeOrganization typeOrganization)
         {
             IParse parser = null;
             try
             {
-                parser = GetParserFabricMethod(ParserType.Scopus);
+                parser = GetParserFabricMethod(ParserType.Scopus, typeOrganization);
                 ParsePageFromUrlTextBox(parser);
             }
             catch (DriverServiceNotFoundException)
             {
                 MessageBox.Show(
                     @"При запуске парсера возникла проблема.У вас отсутствует выбранный браузер, попробуйте другой",
-                    @"Ошибка соединения!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    @"Ошибка соединения!",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
 
             }
             catch (NoSuchElementException ex)
@@ -83,7 +86,7 @@ namespace EmailParserView
             {
                 MessageBox.Show(
                     $@"При запуске парсера возникла проблема. Возможно,вы указали неверный URL.{ex.Message}{ex.StackTrace}",
-                    @"Ошибка соединения!",
+             @"Ошибка соединения!",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
             }
@@ -150,14 +153,13 @@ namespace EmailParserView
 
         }
 
-        private IParse GetParserFabricMethod(ParserType type)
+        private IParse GetParserFabricMethod(ParserType type, TypeOrganization organization)
         {
             IParse baseParser = null;
-            TypeOrganization typeOrganization = (TypeOrganization)(TypeOrganizationCombobox.SelectedItem as ItemComboBox)?.Value;
+            TypeOrganization typeOrganization = organization;
             switch (type)
             {
                 case ParserType.Scopus:
-
                     var settings = new ScopusParserSettings(SupportedSeleniumBrowsers.Chrome, typeOrganization);
                     baseParser = new ScopusParser.ScopusParser(settings);
                     break;
@@ -190,7 +192,8 @@ namespace EmailParserView
             StartParseButton.Enabled = false;
             ReturnedEmailDataGrid.Rows.Clear();
             _persons.Clear();
-            Thread thread = new Thread(StartParseButtonClickAsync);
+            var organization = (TypeOrganization)(TypeOrganizationCombobox.SelectedItem as ItemComboBox)?.Value;
+            Thread thread = new Thread(() => StartParseButtonClickAsync(organization));
             thread.Start();
         }
 
