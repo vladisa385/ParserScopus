@@ -66,6 +66,7 @@
     <Compile Include="EmailParserWinForms.Designer.cs">
       <DependentUpon>EmailParserWinForms.cs</DependentUpon>
     </Compile>
+    <Compile Include="LogSaver\TypeSaver.cs" />
     <Compile Include="ParserType.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

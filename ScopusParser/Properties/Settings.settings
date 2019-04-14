@@ -2,16 +2,13 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ScopusParser.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="IsUseLoginAndPassword" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="IsUseProxy" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="Login" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="Password" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Proxy" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

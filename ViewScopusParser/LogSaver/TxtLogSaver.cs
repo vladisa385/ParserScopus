@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Windows.Forms;
 using ParserModel;
 
 namespace EmailParserView.LogSaver
@@ -15,11 +17,21 @@ namespace EmailParserView.LogSaver
 
         public void Save(List<Person> resultPersons, string pathToFile, bool isOnlyEmail)
         {
-            using (TextWriter tw = new StreamWriter(pathToFile))
+            try
             {
-                foreach (var person in resultPersons)
-                    tw.WriteLine(person.ToString(isOnlyEmail));
+                using (TextWriter tw = new StreamWriter(pathToFile))
+                {
+                    foreach (var person in resultPersons)
+                        tw.WriteLine(person.ToString(isOnlyEmail));
+                }
             }
+            catch (Exception e)
+            {
+                MessageBox.Show(
+                   $@"Во время записи в txt файл произошла ошибка {e.Message} {e.StackTrace}");
+
+            }
+
         }
     }
 }

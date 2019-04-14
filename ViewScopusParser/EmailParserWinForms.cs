@@ -15,19 +15,99 @@ namespace EmailParserView
     public partial class EmailParserWinForms : Form
     {
         private readonly List<Person> _persons;
-        private ILogSave _resultSaver;
         private int _countForAutoSave;
         public EmailParserWinForms()
         {
             _persons = new List<Person>();
-            _resultSaver = new TxtLogSaver();
             _countForAutoSave = 0;
             InitializeComponent();
             SeedAllComboboxValuesAndText();
 
         }
 
-        private void ParsePageFromUrlTextBox(IParse parser)
+        private void StartParseButton_Click(object sender, EventArgs e)
+        {
+            ProgressGroupBox.Visible = true;
+            StartParseButton.Enabled = false;
+            ReturnedEmailDataGrid.Rows.Clear();
+            _persons.Clear();
+            var organization = ((ItemComboBox<TypeOrganization>)TypeOrganizationCombobox.SelectedItem).Value;
+            Thread thread = new Thread(() => HandleErrorsAndBeginParsing(organization));
+            thread.Start();
+        }
+
+        private void HandleErrorsAndBeginParsing(TypeOrganization typeOrganization)
+        {
+            IParse parser = null;
+            try
+            {
+                parser = GetParserFabricMethod(ParserType.Scopus, typeOrganization);
+                StartParsing(parser);
+            }
+            catch (DriverServiceNotFoundException)
+            {
+                ShowErrorToUser("При запуске парсера возникла проблема.У вас отсутствует GoogleChrome");
+            }
+            catch (NoSuchElementException ex)
+            {
+                ShowErrorToUser($@"Проверьте Ваше интернет-соединение. Возможно, вы забыли подключить VPN или указали неверную ссылку.{ex.Message}{ex.StackTrace}");
+            }
+            catch (WebDriverException ex)
+            {
+                ShowErrorToUser($@"При запуске парсера возникла проблема. Возможно,вы указали неверный URL.{ex.Message}{ex.StackTrace}");
+            }
+            catch (Exception ex)
+            {
+                ShowErrorToUser($@"{ex.Message}{ex.StackTrace}");
+            }
+            finally
+            {
+                parser?.Dispose();
+                ChangeControlInMainUi(ProgressGroupBox, () => ProgressGroupBox.Visible = false);
+                ChangeControlInMainUi(StartParseButton, () => StartParseButton.Enabled = true);
+                _countForAutoSave = 0;
+            }
+
+        }
+
+        private IParse GetParserFabricMethod(ParserType typeParser, TypeOrganization organization)
+        {
+            IParse baseParser = null;
+            var typeOrganization = organization;
+            switch (typeParser)
+            {
+                case ParserType.Scopus:
+                    var settings = new ScopusParserSettings(SupportedSeleniumBrowsers.Chrome, typeOrganization);
+                    baseParser = new ScopusParser.ScopusParser(settings);
+                    break;
+                case ParserType.WebOfSciense:
+                    break;
+            }
+            var delay = uint.Parse(delayTextBox.Text) * 1000;
+            var countAttempts = Properties.Settings.Default.CountAttempt;
+            var loggerParser = new LoggerParser(baseParser);
+            baseParser = new SleepRetryerParser(loggerParser, countAttempts, delay);
+            return baseParser;
+        }
+
+        private ILogSave GetSaverFabricMethod(TypeSaver typeSaver)
+        {
+            ILogSave resultSaver = null;
+            switch (typeSaver)
+            {
+                case TypeSaver.Excel:
+                    resultSaver = new ExcelLogSaver(ReturnedEmailDataGrid);
+                    break;
+                case TypeSaver.Txt:
+                    resultSaver = new TxtLogSaver();
+                    break;
+                default:
+                    break;
+            }
+            return resultSaver;
+        }
+
+        private void StartParsing(IParse parser)
         {
             var firstUrl = URLTextBox.Text;
             var nextUrl = firstUrl;
@@ -56,96 +136,44 @@ namespace EmailParserView
             control.Invoke(action);
         }
 
-        private void StartParseButtonClickAsync(TypeOrganization typeOrganization)
-        {
-            IParse parser = null;
-            try
-            {
-                parser = GetParserFabricMethod(ParserType.Scopus, typeOrganization);
-                ParsePageFromUrlTextBox(parser);
-            }
-            catch (DriverServiceNotFoundException)
-            {
-                MessageBox.Show(
-                    @"При запуске парсера возникла проблема.У вас отсутствует выбранный браузер, попробуйте другой",
-                    @"Ошибка соединения!",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
-
-            }
-            catch (NoSuchElementException ex)
-            {
-                MessageBox.Show(
-                    $@"Проверьте Ваше интернет-соединение. Возможно, вы забыли подключить VPN или указали неверную ссылку.{ex.Message}{ex.StackTrace}",
-                    @"Ошибка соединения!",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
-
-            }
-            catch (WebDriverException ex)
-            {
-                MessageBox.Show(
-                    $@"При запуске парсера возникла проблема. Возможно,вы указали неверный URL.{ex.Message}{ex.StackTrace}",
-             @"Ошибка соединения!",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    $@"{ex.Message}{ex.StackTrace}",
-                    @"Ошибка работы парсера!",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
-            }
-            finally
-            {
-                parser?.Dispose();
-                ChangeControlInMainUi(ProgressGroupBox, () => ProgressGroupBox.Visible = false);
-                ChangeControlInMainUi(StartParseButton, () => StartParseButton.Enabled = true);
-                _countForAutoSave = 0;
-            }
-
-        }
-
         private void SeedAllComboboxValuesAndText()
         {
-            var itemsForTypeOrganization = new System.Collections.Generic.List<ItemComboBox>
+            var itemsForTypeOrganization = new System.Collections.Generic.List<ItemComboBox<TypeOrganization>>
             {
-                new ItemComboBox()
+                new ItemComboBox<TypeOrganization>
                 {
                     Text = "Личный ПК",
                     Value = TypeOrganization.Private
                 },
-                new ItemComboBox()
-                {
+                 new ItemComboBox<TypeOrganization>
+                 {
                     Text = "СФУ",
                     Value = TypeOrganization.SFU
                 },
-                new ItemComboBox()
-                {
+               new ItemComboBox<TypeOrganization>
+               {
                     Text = "СибГАУ",
                     Value = TypeOrganization.SibGau
                 }
             };
             TypeOrganizationCombobox.Items.AddRange(items: itemsForTypeOrganization.ToArray());
             TypeOrganizationCombobox.SelectedIndex = 0;
-            var itemsForAutoSaveMode = new System.Collections.Generic.List<ItemComboBox>
+            var itemsForAutoSaveMode = new System.Collections.Generic.List<ItemComboBox<TypeSaver>>
             {
-                new ItemComboBox()
+                new ItemComboBox<TypeSaver>()
                 {
                     Text = "Нет автосохранения",
-                    Value = 0
+                    Value = default(TypeSaver)
                 },
-                new ItemComboBox()
+                new  ItemComboBox<TypeSaver>()
                 {
-                    Text = "Excel",
-                    Value = 1
+                    Text = "Автосохранение в excel",
+                    Value = TypeSaver.Excel
                 },
-                new ItemComboBox()
+                new  ItemComboBox<TypeSaver>()
                 {
-                    Text = "Txt",
-                    Value = 2
+                    Text = "Автосохранение в txt",
+                    Value = TypeSaver.Txt
                 }
             };
             AutoSaveComboBox.Items.AddRange(items: itemsForAutoSaveMode.ToArray());
@@ -153,24 +181,13 @@ namespace EmailParserView
 
         }
 
-        private IParse GetParserFabricMethod(ParserType type, TypeOrganization organization)
+        private void ShowErrorToUser(string text)
         {
-            IParse baseParser = null;
-            TypeOrganization typeOrganization = organization;
-            switch (type)
-            {
-                case ParserType.Scopus:
-                    var settings = new ScopusParserSettings(SupportedSeleniumBrowsers.Chrome, typeOrganization);
-                    baseParser = new ScopusParser.ScopusParser(settings);
-                    break;
-                case ParserType.WebOfSciense:
-                    break;
-            }
-            var delay = uint.Parse(delayTextBox.Text) * 1000;
-            var countAttempts = Properties.Settings.Default.CountAttempt;
-            var loggerParser = new LoggerParser(baseParser);
-            baseParser = new SleepRetryerParser(loggerParser, countAttempts, delay);
-            return baseParser;
+            MessageBox.Show(
+                    text,
+                    @"Ошибка",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
         }
 
         private void PagesCounTextBox_KeyPress(object sender, KeyPressEventArgs e)
@@ -186,22 +203,6 @@ namespace EmailParserView
             }
         }
 
-        private void StartParseButton_Click(object sender, EventArgs e)
-        {
-            ProgressGroupBox.Visible = true;
-            StartParseButton.Enabled = false;
-            ReturnedEmailDataGrid.Rows.Clear();
-            _persons.Clear();
-            var organization = (TypeOrganization)(TypeOrganizationCombobox.SelectedItem as ItemComboBox)?.Value;
-            Thread thread = new Thread(() => StartParseButtonClickAsync(organization));
-            thread.Start();
-        }
-
-        private void выходToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
         private void txtToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog
@@ -213,8 +214,8 @@ namespace EmailParserView
             };
             if (saveFileDialog.ShowDialog() != DialogResult.OK)
                 return;
-            _resultSaver = new TxtLogSaver();
-            Thread thread = new Thread(() => _resultSaver.Save(_persons, saveFileDialog.FileName, IsExportOnlyEmailcheckBox.Checked));
+            var saver = GetSaverFabricMethod(TypeSaver.Txt);
+            Thread thread = new Thread(() => saver.Save(_persons, saveFileDialog.FileName, IsExportOnlyEmailcheckBox.Checked));
             thread.Start();
 
         }
@@ -230,8 +231,8 @@ namespace EmailParserView
             };
             if (saveFileDialog.ShowDialog() != DialogResult.OK)
                 return;
-            _resultSaver = new ExcelLogSaver(ReturnedEmailDataGrid);
-            Thread thread = new Thread(() => _resultSaver.Save(_persons, saveFileDialog.FileName, IsExportOnlyEmailcheckBox.Checked));
+            var saver = GetSaverFabricMethod(TypeSaver.Excel);
+            Thread thread = new Thread(() => saver.Save(_persons, saveFileDialog.FileName, IsExportOnlyEmailcheckBox.Checked));
             thread.Start();
         }
 
@@ -240,27 +241,32 @@ namespace EmailParserView
             if (progressBar1.Value - _countForAutoSave < Properties.Settings.Default.AutoSaveStep)
                 return;
             _countForAutoSave = _countForAutoSave += (int)Properties.Settings.Default.AutoSaveStep;
-            switch ((AutoSaveComboBox.SelectedItem as ItemComboBox)?.Value)
-            {
-                case 0:
-                    return;
-                case 1:
-                    _resultSaver = new TxtLogSaver();
-                    break;
-                case 2:
-                    _resultSaver = new ExcelLogSaver(ReturnedEmailDataGrid);
-                    break;
-            }
 
-            string rootPath = Directory.GetCurrentDirectory();
-            rootPath += $"\\resultParse.{_resultSaver.FileFormat}";
-            if (!File.Exists(rootPath))
+            try
             {
-                File.CreateText(rootPath);
+                var typeSaver = ((ItemComboBox<TypeSaver>)AutoSaveComboBox.SelectedItem).Value;
+                var resultSaver = GetSaverFabricMethod(typeSaver);
+                string rootPath = Directory.GetCurrentDirectory();
+                rootPath += $"\\resultParse.{resultSaver.FileFormat}";
+                if (!File.Exists(rootPath))
+                {
+                    File.CreateText(rootPath);
+                }
+                Thread thread = new Thread(() => resultSaver.Save(
+                    _persons,
+                    rootPath,
+                    IsExportOnlyEmailcheckBox.Checked));
+                thread.Start();
             }
-            Thread thread = new Thread(() => _resultSaver.Save(_persons.GetRange(0, _countForAutoSave), rootPath, IsExportOnlyEmailcheckBox.Checked));
-            thread.Start();
+            catch (Exception)
+            {
+                // ignored
+            }
+        }
 
+        private void выходToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

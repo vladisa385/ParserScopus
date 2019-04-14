@@ -25,30 +25,6 @@ namespace ScopusParser.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool IsUseLoginAndPassword {
-            get {
-                return ((bool)(this["IsUseLoginAndPassword"]));
-            }
-            set {
-                this["IsUseLoginAndPassword"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool IsUseProxy {
-            get {
-                return ((bool)(this["IsUseProxy"]));
-            }
-            set {
-                this["IsUseProxy"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string Login {
             get {
@@ -68,6 +44,18 @@ namespace ScopusParser.Properties {
             }
             set {
                 this["Password"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Proxy {
+            get {
+                return ((string)(this["Proxy"]));
+            }
+            set {
+                this["Proxy"] = value;
             }
         }
     }
