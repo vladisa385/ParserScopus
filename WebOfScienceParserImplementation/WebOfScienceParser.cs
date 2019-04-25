@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using OpenQA.Selenium;
 using ParserModel;
 using ParserModel.ParseWithSelenium;
 
@@ -17,7 +20,17 @@ namespace WebOfScienceParserImplementation
 
         public override string GetNextArticle(string url)
         {
-            return null;
+            try
+            {
+                IWebElement nextLinkUrl = Driver.FindElement(By.ClassName("paginationNext snowplow-navigation-nextpage-top"));
+                //IWebElement nextLink = nextLinkUrl.FindElement(By.XPath("./a"));
+                return nextLinkUrl.GetAttribute("href");
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
         }
 
         public override int GetCountArticle(string url)

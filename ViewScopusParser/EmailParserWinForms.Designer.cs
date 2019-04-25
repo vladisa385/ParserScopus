@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EmailParserWinForms));
             this.ReturnedEmailDataGrid = new System.Windows.Forms.DataGridView();
             this.FIOColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EmailColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -96,7 +95,8 @@
             this.URLTextBox.Name = "URLTextBox";
             this.URLTextBox.Size = new System.Drawing.Size(303, 20);
             this.URLTextBox.TabIndex = 1;
-            this.URLTextBox.Text = resources.GetString("URLTextBox.Text");
+            this.URLTextBox.Text = "https://apps.webofknowledge.com/full_record.do?product=WOS&search_mode=GeneralSea" +
+    "rch&qid=1&SID=F59TpMMspYV3tyyBjku&page=1&doc=1";
             // 
             // label1
             // 
