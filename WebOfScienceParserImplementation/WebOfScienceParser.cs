@@ -39,9 +39,9 @@ namespace WebOfScienceParserImplementation
         {
             try
             {
-                IWebElement nextLinkUrl = Driver.FindElement(By.ClassName("paginationNext snowplow-navigation-nextpage-top"));
-                //IWebElement nextLink = nextLinkUrl.FindElement(By.XPath("./a"));
-                return nextLinkUrl.GetAttribute("href");
+                IWebElement nextLinkUrl = Driver.FindElement(By.ClassName("FR_rec_num"));
+                IWebElement nextLink = nextLinkUrl.FindElement(By.ClassName("paginationNext snowplow-navigation-nextpage-top"));
+                return nextLink.GetAttribute("href");
             }
             catch (Exception)
             {
