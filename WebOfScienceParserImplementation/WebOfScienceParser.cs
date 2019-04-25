@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using OpenQA.Selenium;
 using ParserModel;
 using ParserModel.ParseWithSelenium;
@@ -15,7 +14,7 @@ namespace WebOfScienceParserImplementation
 
         public override List<Person> ParseSpecificArticle(string url)
         {
-            return new List<Person>();
+            return new List<Person> { new Person("23", "23") };
         }
 
         public override string GetNextArticle(string url)
@@ -35,7 +34,7 @@ namespace WebOfScienceParserImplementation
 
         public override int GetCountArticle(string url)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }
