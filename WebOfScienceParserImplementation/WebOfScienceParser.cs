@@ -15,7 +15,24 @@ namespace WebOfScienceParserImplementation
         public override List<Person> ParseSpecificArticle(string url)
         {
             Driver.Navigate().GoToUrl(url);
-            return new List<Person> { new Person("23", "23") };
+            IWebElement authorsList = Driver.FindElement(By.ClassName("l-content"));
+            var countEmails = authorsList.FindElements(By.ClassName("snowplow-author-email-addresses")).Count;
+            var emails = new List<Person>();
+            foreach (var element in authorsList.FindElements(By.ClassName("snowplow-author-email-addresses")))
+            {
+                if (emails.Count == countEmails)
+                    break;
+                try
+                {
+                    var email = element.GetAttribute("href").Substring(7);
+                    emails.Add(new Person("", email));
+                }
+                catch (NoSuchElementException)
+                {
+                    // ignored
+                }
+            }
+            return emails;
         }
 
         public override string GetNextArticle(string url)
