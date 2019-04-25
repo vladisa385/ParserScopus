@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EmailParserView.LogSaver;
 using OpenQA.Selenium;
@@ -34,8 +35,7 @@ namespace EmailParserView
             _persons.Clear();
             var organization = ((ItemComboBox<TypeOrganization>)TypeOrganizationCombobox.SelectedItem).Value;
             var typeParser = ((ItemComboBox<ParserType>)TypeSiteCombobox.SelectedItem).Value;
-            Thread thread = new Thread(() => HandleErrorsAndBeginParsing(organization, typeParser));
-            thread.Start();
+            Task.Run(() => HandleErrorsAndBeginParsing(organization, typeParser));
         }
 
         private void HandleErrorsAndBeginParsing(TypeOrganization typeOrganization, ParserType typeParser)
@@ -222,7 +222,7 @@ namespace EmailParserView
 
         private void txtToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog
+            var saveFileDialog = new SaveFileDialog
             {
                 Filter = "Текстовый документ (*.txt)|*.txt|Все файлы (*.*)|*.*",
                 DefaultExt = "*.txt",
@@ -232,14 +232,12 @@ namespace EmailParserView
             if (saveFileDialog.ShowDialog() != DialogResult.OK)
                 return;
             var saver = GetSaverFabricMethod(TypeSaver.Txt);
-            Thread thread = new Thread(() => saver.Save(_persons, saveFileDialog.FileName, IsExportOnlyEmailcheckBox.Checked));
-            thread.Start();
-
+            Task.Run(() => saver.Save(_persons, saveFileDialog.FileName, IsExportOnlyEmailcheckBox.Checked));
         }
 
         private void excelToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog()
+            var saveFileDialog = new SaveFileDialog
             {
                 Filter = "MS Excel documents (*.xlsx)|*.xlsx",
                 DefaultExt = "*.xlsx",
@@ -249,8 +247,7 @@ namespace EmailParserView
             if (saveFileDialog.ShowDialog() != DialogResult.OK)
                 return;
             var saver = GetSaverFabricMethod(TypeSaver.Excel);
-            Thread thread = new Thread(() => saver.Save(_persons, saveFileDialog.FileName, IsExportOnlyEmailcheckBox.Checked));
-            thread.Start();
+            Task.Run(() => saver.Save(_persons, saveFileDialog.FileName, IsExportOnlyEmailcheckBox.Checked));
         }
 
         private void ReturnedEmailDataGrid_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
@@ -263,17 +260,16 @@ namespace EmailParserView
             {
                 var typeSaver = ((ItemComboBox<TypeSaver>)AutoSaveComboBox.SelectedItem).Value;
                 var resultSaver = GetSaverFabricMethod(typeSaver);
-                string rootPath = Directory.GetCurrentDirectory();
-                rootPath += $"\\resultParse.{resultSaver.FileFormat}";
+                string rootPath = $"{Directory.GetCurrentDirectory()}\\resultParse.{resultSaver.FileFormat}";
                 if (!File.Exists(rootPath))
                 {
                     File.CreateText(rootPath);
                 }
-                Thread thread = new Thread(() => resultSaver.Save(
+                Task.Run(() =>
+                    resultSaver.Save(
                     _persons,
                     rootPath,
                     IsExportOnlyEmailcheckBox.Checked));
-                thread.Start();
             }
             catch (Exception)
             {
