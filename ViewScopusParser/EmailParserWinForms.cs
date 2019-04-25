@@ -6,7 +6,8 @@ using System.Windows.Forms;
 using EmailParserView.LogSaver;
 using OpenQA.Selenium;
 using ParserModel;
-using ScopusParser;
+using ScopusParserImplementation;
+using WebOfScienceParserImplementation;
 using Action = System.Action;
 using TextBox = System.Windows.Forms.TextBox;
 
@@ -32,16 +33,17 @@ namespace EmailParserView
             ReturnedEmailDataGrid.Rows.Clear();
             _persons.Clear();
             var organization = ((ItemComboBox<TypeOrganization>)TypeOrganizationCombobox.SelectedItem).Value;
-            Thread thread = new Thread(() => HandleErrorsAndBeginParsing(organization));
+            var typeParser = ((ItemComboBox<ParserType>)TypeSiteCombobox.SelectedItem).Value;
+            Thread thread = new Thread(() => HandleErrorsAndBeginParsing(organization, typeParser));
             thread.Start();
         }
 
-        private void HandleErrorsAndBeginParsing(TypeOrganization typeOrganization)
+        private void HandleErrorsAndBeginParsing(TypeOrganization typeOrganization, ParserType typeParser)
         {
             IParse parser = null;
             try
             {
-                parser = GetParserFabricMethod(ParserType.Scopus, typeOrganization);
+                parser = GetParserFabricMethod(typeParser, typeOrganization);
                 StartParsing(parser);
             }
             catch (DriverServiceNotFoundException)
@@ -73,14 +75,14 @@ namespace EmailParserView
         private IParse GetParserFabricMethod(ParserType typeParser, TypeOrganization organization)
         {
             IParse baseParser = null;
-            var typeOrganization = organization;
+            var settings = new ParserSettings(SupportedSeleniumBrowsers.Chrome, organization);
             switch (typeParser)
             {
                 case ParserType.Scopus:
-                    var settings = new ScopusParserSettings(SupportedSeleniumBrowsers.Chrome, typeOrganization);
-                    baseParser = new ScopusParser.ScopusParser(settings);
+                    baseParser = new ScopusParser(settings);
                     break;
                 case ParserType.WebOfSciense:
+                    baseParser = new WebOfScienceParser(settings);
                     break;
             }
             var delay = uint.Parse(delayTextBox.Text) * 1000;
@@ -100,8 +102,6 @@ namespace EmailParserView
                     break;
                 case TypeSaver.Txt:
                     resultSaver = new TxtLogSaver();
-                    break;
-                default:
                     break;
             }
             return resultSaver;
@@ -158,6 +158,7 @@ namespace EmailParserView
             };
             TypeOrganizationCombobox.Items.AddRange(items: itemsForTypeOrganization.ToArray());
             TypeOrganizationCombobox.SelectedIndex = 0;
+
             var itemsForAutoSaveMode = new System.Collections.Generic.List<ItemComboBox<TypeSaver>>
             {
                 new ItemComboBox<TypeSaver>()
@@ -178,6 +179,22 @@ namespace EmailParserView
             };
             AutoSaveComboBox.Items.AddRange(items: itemsForAutoSaveMode.ToArray());
             AutoSaveComboBox.SelectedIndex = 0;
+
+            var itemsForTypeSite = new System.Collections.Generic.List<ItemComboBox<ParserType>>
+            {
+                new ItemComboBox<ParserType>()
+                {
+                    Text = "Scopus",
+                    Value = ParserType.Scopus
+                },
+                new  ItemComboBox<ParserType>()
+                {
+                    Text = "WebOfScience",
+                    Value = ParserType.WebOfSciense
+                },
+            };
+            TypeSiteCombobox.Items.AddRange(items: itemsForTypeSite.ToArray());
+            TypeSiteCombobox.SelectedIndex = 0;
 
         }
 

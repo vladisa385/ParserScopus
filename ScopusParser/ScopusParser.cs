@@ -1,29 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using ParserModel;
+using ParserModel.ParseWithSelenium;
 
-namespace ScopusParser
+namespace ScopusParserImplementation
 {
-    public class ScopusParser : IParse
+    public class ScopusParser : AParseWithSelenium
     {
-        private readonly IWebDriver _driver;
+
+        public ScopusParser(ParserSettings settings) : base(settings)
+        { }
 
 
-        public ScopusParser(ScopusParserSettings settings)
+        public override List<Person> ParseSpecificArticle(string url)
         {
-            _driver = CreateIWebDriverFabricMethod(settings);
-        }
-
-        public List<Person> ParseSpecificArticle(string url)
-        {
-            _driver.Navigate().GoToUrl(url);
-            IWebElement authorsList = _driver.FindElement(By.Id("authorlist"));
-            var countEmails = _driver.FindElements(By.ClassName("correspondenceEmail")).Count;
+            Driver.Navigate().GoToUrl(url);
+            IWebElement authorsList = Driver.FindElement(By.Id("authorlist"));
+            var countEmails = Driver.FindElements(By.ClassName("correspondenceEmail")).Count;
             var emails = new List<Person>();
             foreach (var element in authorsList.FindElements(By.TagName("li")))
             {
@@ -45,11 +40,11 @@ namespace ScopusParser
             return emails;
         }
 
-        public string GetNextArticle(string url)
+        public override string GetNextArticle(string url)
         {
             try
             {
-                IWebElement nextLinkUrl = _driver.FindElement(By.ClassName("nextLink"));
+                IWebElement nextLinkUrl = Driver.FindElement(By.ClassName("nextLink"));
                 IWebElement nextLink = nextLinkUrl.FindElement(By.XPath("./a"));
                 return nextLink.GetAttribute("href");
             }
@@ -60,10 +55,9 @@ namespace ScopusParser
 
         }
 
-        public int GetCountArticle(string url)
+        public override int GetCountArticle(string url)
         {
-            IWebElement count = _driver.FindElement(By.ClassName("recordPageCount"));
-
+            IWebElement count = Driver.FindElement(By.ClassName("recordPageCount"));
             string articleCount = "";
             bool check = false;
 
@@ -82,52 +76,6 @@ namespace ScopusParser
             }
 
             return articleCount == "" ? 0 : Convert.ToInt32(articleCount);
-        }
-
-        public void Dispose()
-        {
-            _driver?.Dispose();
-        }
-
-        private IWebDriver CreateIWebDriverFabricMethod(ScopusParserSettings settings)
-        {
-            IWebDriver driver;
-            var driverDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            switch (settings.Browser)
-            {
-                case SupportedSeleniumBrowsers.Chrome:
-                    var options = new ChromeOptions();
-                    Proxy proxy = null;
-                    switch (settings.TypeOrganization)
-                    {
-                        case TypeOrganization.Private:
-                            proxy = new Proxy
-                            {
-                                Kind = ProxyKind.System
-                            };
-                            break;
-                        case TypeOrganization.SFU:
-                            proxy = new Proxy
-                            {
-                                Kind = ProxyKind.System
-                            };
-                            break;
-                        case TypeOrganization.SibGau:
-                            proxy = new Proxy
-                            {
-                                Kind = ProxyKind.System
-                            };
-                            break;
-
-                    }
-                    options.Proxy = proxy;
-                    driver = new ChromeDriver(driverDirectory, options);
-                    break;
-                default:
-                    driver = null;
-                    break;
-            }
-            return driver;
         }
 
         private string RemoveBadSymbols(string rawString)

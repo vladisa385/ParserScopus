@@ -106,6 +106,10 @@
       <Project>{acd5afc7-9138-4803-b069-57802352dc1a}</Project>
       <Name>ScopusParserImplementation</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WebOfScienceParserImplementation\WebOfScienceParserImplementation.csproj">
+      <Project>{e96e7a76-2c83-4b03-9a2f-62e8fd53c412}</Project>
+      <Name>WebOfScienceParserImplementation</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

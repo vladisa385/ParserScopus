@@ -1,7 +1,4 @@
-﻿using EmailParserView.LogSaver;
-using ScopusParser;
-
-namespace EmailParserView
+﻿namespace EmailParserView
 {
     public class ItemComboBox<T>
     {

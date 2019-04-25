@@ -7,8 +7,8 @@
     <ProjectGuid>{ACD5AFC7-9138-4803-B069-57802352DC1A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ScopusParser</RootNamespace>
-    <AssemblyName>ScopusParser</AssemblyName>
+    <RootNamespace>ScopusParserImplementation</RootNamespace>
+    <AssemblyName>ScopusParserImplementation</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -55,9 +55,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="ScopusParser.cs" />
-    <Compile Include="ScopusParserSettings.cs" />
-    <Compile Include="SupportedSeleniumBrowsers.cs" />
-    <Compile Include="TypeOrganization.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ParserModel\ParserModel.csproj">

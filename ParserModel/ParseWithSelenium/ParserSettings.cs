@@ -1,11 +1,11 @@
-﻿namespace ScopusParser
+﻿namespace ParserModel
 {
-    public class ScopusParserSettings
+    public class ParserSettings
     {
         public readonly SupportedSeleniumBrowsers Browser;
         public readonly TypeOrganization TypeOrganization;
 
-        public ScopusParserSettings(SupportedSeleniumBrowsers browser, TypeOrganization typeOrganization)
+        public ParserSettings(SupportedSeleniumBrowsers browser, TypeOrganization typeOrganization)
         {
             Browser = browser;
             TypeOrganization = typeOrganization;

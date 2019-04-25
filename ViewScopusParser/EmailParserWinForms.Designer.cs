@@ -54,6 +54,8 @@
             this.AutoSaveComboBox = new System.Windows.Forms.ComboBox();
             this.TypeOrganizationLabel = new System.Windows.Forms.Label();
             this.TypeOrganizationCombobox = new System.Windows.Forms.ComboBox();
+            this.TypeSite = new System.Windows.Forms.Label();
+            this.TypeSiteCombobox = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.ReturnedEmailDataGrid)).BeginInit();
             this.ProgressGroupBox.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -67,7 +69,7 @@
             this.ReturnedEmailDataGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.FIOColumn,
             this.EmailColumn});
-            this.ReturnedEmailDataGrid.Location = new System.Drawing.Point(11, 161);
+            this.ReturnedEmailDataGrid.Location = new System.Drawing.Point(12, 204);
             this.ReturnedEmailDataGrid.Name = "ReturnedEmailDataGrid";
             this.ReturnedEmailDataGrid.ReadOnly = true;
             this.ReturnedEmailDataGrid.Size = new System.Drawing.Size(426, 191);
@@ -90,7 +92,7 @@
             // 
             // URLTextBox
             // 
-            this.URLTextBox.Location = new System.Drawing.Point(43, 22);
+            this.URLTextBox.Location = new System.Drawing.Point(46, 61);
             this.URLTextBox.Name = "URLTextBox";
             this.URLTextBox.Size = new System.Drawing.Size(303, 20);
             this.URLTextBox.TabIndex = 1;
@@ -99,7 +101,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 25);
+            this.label1.Location = new System.Drawing.Point(15, 64);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(29, 13);
             this.label1.TabIndex = 2;
@@ -107,7 +109,7 @@
             // 
             // StartParseButton
             // 
-            this.StartParseButton.Location = new System.Drawing.Point(352, 20);
+            this.StartParseButton.Location = new System.Drawing.Point(355, 59);
             this.StartParseButton.Name = "StartParseButton";
             this.StartParseButton.Size = new System.Drawing.Size(85, 23);
             this.StartParseButton.TabIndex = 3;
@@ -126,7 +128,7 @@
             // CountPagesLabel
             // 
             this.CountPagesLabel.AutoSize = true;
-            this.CountPagesLabel.Location = new System.Drawing.Point(12, 45);
+            this.CountPagesLabel.Location = new System.Drawing.Point(15, 84);
             this.CountPagesLabel.Name = "CountPagesLabel";
             this.CountPagesLabel.Size = new System.Drawing.Size(135, 13);
             this.CountPagesLabel.TabIndex = 8;
@@ -134,7 +136,7 @@
             // 
             // PagesCounTextBox
             // 
-            this.PagesCounTextBox.Location = new System.Drawing.Point(267, 49);
+            this.PagesCounTextBox.Location = new System.Drawing.Point(270, 88);
             this.PagesCounTextBox.Name = "PagesCounTextBox";
             this.PagesCounTextBox.Size = new System.Drawing.Size(79, 20);
             this.PagesCounTextBox.TabIndex = 9;
@@ -145,7 +147,7 @@
             // 
             this.ProgressGroupBox.Controls.Add(this.PersentLabel);
             this.ProgressGroupBox.Controls.Add(this.progressBar1);
-            this.ProgressGroupBox.Location = new System.Drawing.Point(12, 330);
+            this.ProgressGroupBox.Location = new System.Drawing.Point(13, 373);
             this.ProgressGroupBox.Name = "ProgressGroupBox";
             this.ProgressGroupBox.Size = new System.Drawing.Size(425, 66);
             this.ProgressGroupBox.TabIndex = 11;
@@ -212,7 +214,7 @@
             // 
             // delayTextBox
             // 
-            this.delayTextBox.Location = new System.Drawing.Point(267, 75);
+            this.delayTextBox.Location = new System.Drawing.Point(270, 114);
             this.delayTextBox.Name = "delayTextBox";
             this.delayTextBox.Size = new System.Drawing.Size(79, 20);
             this.delayTextBox.TabIndex = 16;
@@ -222,7 +224,7 @@
             // Задержка
             // 
             this.Задержка.AutoSize = true;
-            this.Задержка.Location = new System.Drawing.Point(12, 75);
+            this.Задержка.Location = new System.Drawing.Point(15, 114);
             this.Задержка.Name = "Задержка";
             this.Задержка.Size = new System.Drawing.Size(243, 13);
             this.Задержка.TabIndex = 17;
@@ -231,7 +233,7 @@
             // IsExportOnlyEmailcheckBox
             // 
             this.IsExportOnlyEmailcheckBox.AutoSize = true;
-            this.IsExportOnlyEmailcheckBox.Location = new System.Drawing.Point(18, 128);
+            this.IsExportOnlyEmailcheckBox.Location = new System.Drawing.Point(19, 171);
             this.IsExportOnlyEmailcheckBox.Name = "IsExportOnlyEmailcheckBox";
             this.IsExportOnlyEmailcheckBox.Size = new System.Drawing.Size(174, 17);
             this.IsExportOnlyEmailcheckBox.TabIndex = 13;
@@ -242,7 +244,7 @@
             // 
             this.AutoSaveComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.AutoSaveComboBox.FormattingEnabled = true;
-            this.AutoSaveComboBox.Location = new System.Drawing.Point(264, 134);
+            this.AutoSaveComboBox.Location = new System.Drawing.Point(265, 177);
             this.AutoSaveComboBox.Name = "AutoSaveComboBox";
             this.AutoSaveComboBox.Size = new System.Drawing.Size(173, 21);
             this.AutoSaveComboBox.TabIndex = 19;
@@ -250,7 +252,7 @@
             // TypeOrganizationLabel
             // 
             this.TypeOrganizationLabel.AutoSize = true;
-            this.TypeOrganizationLabel.Location = new System.Drawing.Point(15, 100);
+            this.TypeOrganizationLabel.Location = new System.Drawing.Point(18, 139);
             this.TypeOrganizationLabel.Name = "TypeOrganizationLabel";
             this.TypeOrganizationLabel.Size = new System.Drawing.Size(94, 13);
             this.TypeOrganizationLabel.TabIndex = 20;
@@ -260,16 +262,36 @@
             // 
             this.TypeOrganizationCombobox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.TypeOrganizationCombobox.FormattingEnabled = true;
-            this.TypeOrganizationCombobox.Location = new System.Drawing.Point(267, 104);
+            this.TypeOrganizationCombobox.Location = new System.Drawing.Point(270, 143);
             this.TypeOrganizationCombobox.Name = "TypeOrganizationCombobox";
             this.TypeOrganizationCombobox.Size = new System.Drawing.Size(79, 21);
             this.TypeOrganizationCombobox.TabIndex = 21;
+            // 
+            // TypeSite
+            // 
+            this.TypeSite.AutoSize = true;
+            this.TypeSite.Location = new System.Drawing.Point(18, 34);
+            this.TypeSite.Name = "TypeSite";
+            this.TypeSite.Size = new System.Drawing.Size(81, 13);
+            this.TypeSite.TabIndex = 22;
+            this.TypeSite.Text = "Тип источника";
+            // 
+            // TypeSiteCombobox
+            // 
+            this.TypeSiteCombobox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.TypeSiteCombobox.FormattingEnabled = true;
+            this.TypeSiteCombobox.Location = new System.Drawing.Point(212, 34);
+            this.TypeSiteCombobox.Name = "TypeSiteCombobox";
+            this.TypeSiteCombobox.Size = new System.Drawing.Size(137, 21);
+            this.TypeSiteCombobox.TabIndex = 23;
             // 
             // EmailParserWinForms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(449, 403);
+            this.ClientSize = new System.Drawing.Size(449, 432);
+            this.Controls.Add(this.TypeSiteCombobox);
+            this.Controls.Add(this.TypeSite);
             this.Controls.Add(this.TypeOrganizationCombobox);
             this.Controls.Add(this.TypeOrganizationLabel);
             this.Controls.Add(this.AutoSaveComboBox);
@@ -324,6 +346,8 @@
         private System.Windows.Forms.ComboBox AutoSaveComboBox;
         private System.Windows.Forms.Label TypeOrganizationLabel;
         private System.Windows.Forms.ComboBox TypeOrganizationCombobox;
+        private System.Windows.Forms.Label TypeSite;
+        private System.Windows.Forms.ComboBox TypeSiteCombobox;
     }
 }
 

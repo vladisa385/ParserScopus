@@ -1,4 +1,4 @@
-﻿namespace ScopusParser
+﻿namespace ParserModel
 {
     public enum SupportedSeleniumBrowsers
     {
