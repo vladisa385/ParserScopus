@@ -14,6 +14,7 @@ namespace WebOfScienceParserImplementation
 
         public override List<Person> ParseSpecificArticle(string url)
         {
+            Driver.Navigate().GoToUrl(url);
             return new List<Person> { new Person("23", "23") };
         }
 
