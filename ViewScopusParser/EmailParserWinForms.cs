@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using EmailParserView.LogSaver;
@@ -35,20 +34,22 @@ namespace EmailParserView
             _persons.Clear();
             var organization = ((ItemComboBox<TypeOrganization>)TypeOrganizationCombobox.SelectedItem).Value;
             var typeParser = ((ItemComboBox<ParserType>)TypeSiteCombobox.SelectedItem).Value;
-            Task.Run(() => HandleErrorsAndBeginParsing(organization, typeParser));
+            var browser = ((ItemComboBox<SupportedSeleniumBrowsers>)SelectBrowserComboBox.SelectedItem).Value;
+            var settings = new ParserSettings(browser, organization);
+            Task.Run(() => HandleErrorsAndBeginParsing(typeParser, settings));
         }
 
-        private void HandleErrorsAndBeginParsing(TypeOrganization typeOrganization, ParserType typeParser)
+        private void HandleErrorsAndBeginParsing(ParserType parserType, ParserSettings settings)
         {
             IParse parser = null;
             try
             {
-                parser = GetParserFabricMethod(typeParser, typeOrganization);
+                parser = GetParserFabricMethod(parserType, settings);
                 StartParsing(parser);
             }
-            catch (DriverServiceNotFoundException e)
+            catch (DriverServiceNotFoundException ex)
             {
-                ShowErrorToUser("При запуске парсера возникла проблема.У вас отсутствует нужный браузер");
+                ShowErrorToUser($"При запуске парсера возникла проблема.У вас отсутствует нужный браузер{ex.Message}{ex.StackTrace}");
             }
             catch (NoSuchElementException ex)
             {
@@ -72,10 +73,9 @@ namespace EmailParserView
 
         }
 
-        private IParse GetParserFabricMethod(ParserType typeParser, TypeOrganization organization)
+        private IParse GetParserFabricMethod(ParserType typeParser, ParserSettings settings)
         {
             IParse baseParser = null;
-            var settings = new ParserSettings(SupportedSeleniumBrowsers.FireFox, organization);
             switch (typeParser)
             {
                 case ParserType.Scopus:
@@ -161,17 +161,17 @@ namespace EmailParserView
 
             var itemsForAutoSaveMode = new System.Collections.Generic.List<ItemComboBox<TypeSaver>>
             {
-                new ItemComboBox<TypeSaver>()
+                new ItemComboBox<TypeSaver>
                 {
                     Text = "Нет автосохранения",
                     Value = default(TypeSaver)
                 },
-                new  ItemComboBox<TypeSaver>()
+                new  ItemComboBox<TypeSaver>
                 {
                     Text = "Автосохранение в excel",
                     Value = TypeSaver.Excel
                 },
-                new  ItemComboBox<TypeSaver>()
+                new  ItemComboBox<TypeSaver>
                 {
                     Text = "Автосохранение в txt",
                     Value = TypeSaver.Txt
@@ -182,12 +182,12 @@ namespace EmailParserView
 
             var itemsForTypeSite = new System.Collections.Generic.List<ItemComboBox<ParserType>>
             {
-                new ItemComboBox<ParserType>()
+                new ItemComboBox<ParserType>
                 {
                     Text = "Scopus",
                     Value = ParserType.Scopus
                 },
-                new  ItemComboBox<ParserType>()
+                new  ItemComboBox<ParserType>
                 {
                     Text = "WebOfScience",
                     Value = ParserType.WebOfSciense
@@ -195,6 +195,22 @@ namespace EmailParserView
             };
             TypeSiteCombobox.Items.AddRange(items: itemsForTypeSite.ToArray());
             TypeSiteCombobox.SelectedIndex = 0;
+
+            var itemsForBrowsers = new System.Collections.Generic.List<ItemComboBox<SupportedSeleniumBrowsers>>
+            {
+                new ItemComboBox<SupportedSeleniumBrowsers>
+                {
+                    Text = "Chrome",
+                    Value = SupportedSeleniumBrowsers.Chrome
+                },
+                new  ItemComboBox<SupportedSeleniumBrowsers>
+                {
+                    Text = "FireFox",
+                    Value = SupportedSeleniumBrowsers.FireFox
+                },
+            };
+            SelectBrowserComboBox.Items.AddRange(items: itemsForBrowsers.ToArray());
+            SelectBrowserComboBox.SelectedIndex = 0;
 
         }
 
@@ -224,10 +240,10 @@ namespace EmailParserView
         {
             var saveFileDialog = new SaveFileDialog
             {
-                Filter = "Текстовый документ (*.txt)|*.txt|Все файлы (*.*)|*.*",
+                Filter = @"Текстовый документ (*.txt)|*.txt|Все файлы (*.*)|*.*",
                 DefaultExt = "*.txt",
                 FileName = "resultsFromParse",
-                Title = "Укажите директорию и имя файла для сохранения"
+                Title = @"Укажите директорию и имя файла для сохранения"
             };
             if (saveFileDialog.ShowDialog() != DialogResult.OK)
                 return;
@@ -239,10 +255,10 @@ namespace EmailParserView
         {
             var saveFileDialog = new SaveFileDialog
             {
-                Filter = "MS Excel documents (*.xlsx)|*.xlsx",
+                Filter = @"MS Excel documents (*.xlsx)|*.xlsx",
                 DefaultExt = "*.xlsx",
                 FileName = "resultsFromParse",
-                Title = "Укажите директорию и имя файла для сохранения"
+                Title = @"Укажите директорию и имя файла для сохранения"
             };
             if (saveFileDialog.ShowDialog() != DialogResult.OK)
                 return;
@@ -260,7 +276,7 @@ namespace EmailParserView
             {
                 var typeSaver = ((ItemComboBox<TypeSaver>)AutoSaveComboBox.SelectedItem).Value;
                 var resultSaver = GetSaverFabricMethod(typeSaver);
-                string rootPath = $"{Directory.GetCurrentDirectory()}\\resultParse.{resultSaver.FileFormat}";
+                var rootPath = $"{Directory.GetCurrentDirectory()}\\resultParse.{resultSaver.FileFormat}";
                 if (!File.Exists(rootPath))
                 {
                     File.CreateText(rootPath);

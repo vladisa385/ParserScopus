@@ -55,6 +55,8 @@
             this.TypeOrganizationCombobox = new System.Windows.Forms.ComboBox();
             this.TypeSite = new System.Windows.Forms.Label();
             this.TypeSiteCombobox = new System.Windows.Forms.ComboBox();
+            this.labelForSelectBrowser = new System.Windows.Forms.Label();
+            this.SelectBrowserComboBox = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.ReturnedEmailDataGrid)).BeginInit();
             this.ProgressGroupBox.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -280,16 +282,36 @@
             // 
             this.TypeSiteCombobox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.TypeSiteCombobox.FormattingEnabled = true;
-            this.TypeSiteCombobox.Location = new System.Drawing.Point(212, 34);
+            this.TypeSiteCombobox.Location = new System.Drawing.Point(105, 31);
             this.TypeSiteCombobox.Name = "TypeSiteCombobox";
             this.TypeSiteCombobox.Size = new System.Drawing.Size(137, 21);
             this.TypeSiteCombobox.TabIndex = 23;
+            // 
+            // labelForSelectBrowser
+            // 
+            this.labelForSelectBrowser.AutoSize = true;
+            this.labelForSelectBrowser.Location = new System.Drawing.Point(249, 38);
+            this.labelForSelectBrowser.Name = "labelForSelectBrowser";
+            this.labelForSelectBrowser.Size = new System.Drawing.Size(49, 13);
+            this.labelForSelectBrowser.TabIndex = 24;
+            this.labelForSelectBrowser.Text = "Браузер";
+            // 
+            // SelectBrowserComboBox
+            // 
+            this.SelectBrowserComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.SelectBrowserComboBox.FormattingEnabled = true;
+            this.SelectBrowserComboBox.Location = new System.Drawing.Point(305, 34);
+            this.SelectBrowserComboBox.Name = "SelectBrowserComboBox";
+            this.SelectBrowserComboBox.Size = new System.Drawing.Size(135, 21);
+            this.SelectBrowserComboBox.TabIndex = 25;
             // 
             // EmailParserWinForms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(449, 432);
+            this.Controls.Add(this.SelectBrowserComboBox);
+            this.Controls.Add(this.labelForSelectBrowser);
             this.Controls.Add(this.TypeSiteCombobox);
             this.Controls.Add(this.TypeSite);
             this.Controls.Add(this.TypeOrganizationCombobox);
@@ -348,6 +370,8 @@
         private System.Windows.Forms.ComboBox TypeOrganizationCombobox;
         private System.Windows.Forms.Label TypeSite;
         private System.Windows.Forms.ComboBox TypeSiteCombobox;
+        private System.Windows.Forms.Label labelForSelectBrowser;
+        private System.Windows.Forms.ComboBox SelectBrowserComboBox;
     }
 }
 

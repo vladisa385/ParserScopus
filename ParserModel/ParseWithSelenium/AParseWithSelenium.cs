@@ -26,66 +26,44 @@ namespace ParserModel.ParseWithSelenium
         {
             IWebDriver driver;
             var driverDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Proxy proxy = null;
+            switch (settings.TypeOrganization)
+            {
+                case TypeOrganization.Private:
+                    proxy = new Proxy
+                    {
+                        Kind = ProxyKind.System
+                    };
+                    break;
+                case TypeOrganization.SFU:
+                    proxy = new Proxy
+                    {
+                        Kind = ProxyKind.System
+                    };
+                    break;
+                case TypeOrganization.SibGau:
+                    proxy = new Proxy
+                    {
+                        Kind = ProxyKind.System
+                    };
+                    break;
+
+            }
             switch (settings.Browser)
             {
                 case SupportedSeleniumBrowsers.Chrome:
-                    var options = new ChromeOptions();
-                    Proxy proxy = null;
-                    switch (settings.TypeOrganization)
+                    var options = new ChromeOptions
                     {
-                        case TypeOrganization.Private:
-                            proxy = new Proxy
-                            {
-                                Kind = ProxyKind.System
-                            };
-                            break;
-                        case TypeOrganization.SFU:
-                            proxy = new Proxy
-                            {
-                                Kind = ProxyKind.System
-                            };
-                            break;
-                        case TypeOrganization.SibGau:
-                            proxy = new Proxy
-                            {
-                                Kind = ProxyKind.System
-                            };
-                            break;
-
-                    }
-                    options.Proxy = proxy;
-                    var x = 
-                        $@"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\GoogleChromePortable\App\Chrome-bin\chrome.exe";
-                    options.BinaryLocation = x;
-                    driver = new ChromeDriver( options);
+                        Proxy = proxy
+                    };
+                    driver = new ChromeDriver(options);
                     break;
                 case SupportedSeleniumBrowsers.FireFox:
-                    var optionsFirefox = new FirefoxOptions();
-                    Proxy proxyFirefox = null;
-                    switch (settings.TypeOrganization)
+                    var optionsFirefox = new FirefoxOptions
                     {
-                        case TypeOrganization.Private:
-                            proxy = new Proxy
-                            {
-                                Kind = ProxyKind.System
-                            };
-                            break;
-                        case TypeOrganization.SFU:
-                            proxy = new Proxy
-                            {
-                                Kind = ProxyKind.System
-                            };
-                            break;
-                        case TypeOrganization.SibGau:
-                            proxy = new Proxy
-                            {
-                                Kind = ProxyKind.System
-                            };
-                            break;
-
-                    }
-                    optionsFirefox.Proxy = proxyFirefox;
-                    driver = new FirefoxDriver(driverDirectory,optionsFirefox);
+                        Proxy = proxy
+                    };
+                    driver = new FirefoxDriver(driverDirectory, optionsFirefox);
                     break;
 
                 default:
