@@ -46,9 +46,9 @@ namespace EmailParserView
                 parser = GetParserFabricMethod(typeParser, typeOrganization);
                 StartParsing(parser);
             }
-            catch (DriverServiceNotFoundException)
+            catch (DriverServiceNotFoundException e)
             {
-                ShowErrorToUser("При запуске парсера возникла проблема.У вас отсутствует GoogleChrome");
+                ShowErrorToUser("При запуске парсера возникла проблема.У вас отсутствует нужный браузер");
             }
             catch (NoSuchElementException ex)
             {
@@ -75,7 +75,7 @@ namespace EmailParserView
         private IParse GetParserFabricMethod(ParserType typeParser, TypeOrganization organization)
         {
             IParse baseParser = null;
-            var settings = new ParserSettings(SupportedSeleniumBrowsers.Chrome, organization);
+            var settings = new ParserSettings(SupportedSeleniumBrowsers.FireFox, organization);
             switch (typeParser)
             {
                 case ParserType.Scopus:

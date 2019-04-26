@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
 
 namespace ParserModel.ParseWithSelenium
 {
@@ -53,8 +54,40 @@ namespace ParserModel.ParseWithSelenium
 
                     }
                     options.Proxy = proxy;
-                    driver = new ChromeDriver(driverDirectory, options);
+                    var x = 
+                        $@"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\GoogleChromePortable\App\Chrome-bin\chrome.exe";
+                    options.BinaryLocation = x;
+                    driver = new ChromeDriver( options);
                     break;
+                case SupportedSeleniumBrowsers.FireFox:
+                    var optionsFirefox = new FirefoxOptions();
+                    Proxy proxyFirefox = null;
+                    switch (settings.TypeOrganization)
+                    {
+                        case TypeOrganization.Private:
+                            proxy = new Proxy
+                            {
+                                Kind = ProxyKind.System
+                            };
+                            break;
+                        case TypeOrganization.SFU:
+                            proxy = new Proxy
+                            {
+                                Kind = ProxyKind.System
+                            };
+                            break;
+                        case TypeOrganization.SibGau:
+                            proxy = new Proxy
+                            {
+                                Kind = ProxyKind.System
+                            };
+                            break;
+
+                    }
+                    optionsFirefox.Proxy = proxyFirefox;
+                    driver = new FirefoxDriver(driverDirectory,optionsFirefox);
+                    break;
+
                 default:
                     driver = null;
                     break;
