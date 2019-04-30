@@ -236,7 +236,7 @@
             // IsExportOnlyEmailcheckBox
             // 
             this.IsExportOnlyEmailcheckBox.AutoSize = true;
-            this.IsExportOnlyEmailcheckBox.Location = new System.Drawing.Point(18, 155);
+            this.IsExportOnlyEmailcheckBox.Location = new System.Drawing.Point(85, 178);
             this.IsExportOnlyEmailcheckBox.Name = "IsExportOnlyEmailcheckBox";
             this.IsExportOnlyEmailcheckBox.Size = new System.Drawing.Size(174, 17);
             this.IsExportOnlyEmailcheckBox.TabIndex = 13;
@@ -255,7 +255,7 @@
             // TypeOrganizationLabel
             // 
             this.TypeOrganizationLabel.AutoSize = true;
-            this.TypeOrganizationLabel.Location = new System.Drawing.Point(18, 139);
+            this.TypeOrganizationLabel.Location = new System.Drawing.Point(16, 151);
             this.TypeOrganizationLabel.Name = "TypeOrganizationLabel";
             this.TypeOrganizationLabel.Size = new System.Drawing.Size(94, 13);
             this.TypeOrganizationLabel.TabIndex = 20;
@@ -308,9 +308,9 @@
             // 
             // ClearPersonsButton
             // 
-            this.ClearPersonsButton.Location = new System.Drawing.Point(13, 175);
+            this.ClearPersonsButton.Location = new System.Drawing.Point(13, 178);
             this.ClearPersonsButton.Name = "ClearPersonsButton";
-            this.ClearPersonsButton.Size = new System.Drawing.Size(99, 23);
+            this.ClearPersonsButton.Size = new System.Drawing.Size(69, 23);
             this.ClearPersonsButton.TabIndex = 26;
             this.ClearPersonsButton.Text = "Очистить";
             this.ClearPersonsButton.UseVisualStyleBackColor = true;

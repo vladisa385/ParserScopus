@@ -273,7 +273,7 @@ namespace EmailParserView
             {
                 var typeSaver = ((ItemComboBox<TypeSaver>)AutoSaveComboBox.SelectedItem).Value;
                 var resultSaver = GetSaverFabricMethod(typeSaver);
-                var rootPath = $"{Directory.GetCurrentDirectory()}\\Backup\\resultParse{DateTime.Now}.{resultSaver.FileFormat}";
+                var rootPath = $"{Directory.GetCurrentDirectory()}\\Backup\\resultParse[{DateTime.Now:hh/mm/ss}].{resultSaver.FileFormat}";
                 if (!File.Exists(rootPath))
                 {
                     File.CreateText(rootPath);
