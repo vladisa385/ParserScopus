@@ -50,6 +50,13 @@ namespace ParserModel
             return res;
         }
 
+        public void Restart()
+        {
+            LogWithDate("[Restart] Начинаем перезапуск парсера");
+            _parser.Restart();
+            LogWithDate("[Restart] Успешно перезапустили");
+        }
+
         private void LogWithDate(string text)
         {
             try

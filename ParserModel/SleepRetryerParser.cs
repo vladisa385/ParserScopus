@@ -27,6 +27,11 @@ namespace ParserModel
             return InvokeMethodWithCountAttempts(_parser.GetCountArticle, url);
         }
 
+        public void Restart()
+        {
+            _parser.Restart();
+        }
+
         public string GetNextArticle(string url)
         {
             var localCountAttempts = 0;
@@ -35,7 +40,7 @@ namespace ParserModel
             {
                 try
                 {
-                    Thread.Sleep((int)(_miliSecondForSleeping + 1000 * localCountAttempts));
+                    Thread.Sleep((int)_miliSecondForSleeping);
                     result = _parser.GetNextArticle(url);
                     if (result != null)
                         return result;
@@ -43,6 +48,7 @@ namespace ParserModel
                 }
                 catch (Exception)
                 {
+                    Restart();
                     localCountAttempts += 1;
                     if (localCountAttempts == _countAttempts)
                         throw;
@@ -64,11 +70,12 @@ namespace ParserModel
             {
                 try
                 {
-                    Thread.Sleep((int)(_miliSecondForSleeping + 1000 * localCountAttempts));
+                    Thread.Sleep((int)_miliSecondForSleeping);
                     return func(delegateParam);
                 }
                 catch (Exception)
                 {
+                    Restart();
                     localCountAttempts += 1;
                     if (localCountAttempts == _countAttempts)
                         throw;

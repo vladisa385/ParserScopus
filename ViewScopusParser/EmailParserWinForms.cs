@@ -30,8 +30,6 @@ namespace EmailParserView
         {
             ProgressGroupBox.Visible = true;
             StartParseButton.Enabled = false;
-            ReturnedEmailDataGrid.Rows.Clear();
-            _persons.Clear();
             var organization = ((ItemComboBox<TypeOrganization>)TypeOrganizationCombobox.SelectedItem).Value;
             var typeParser = ((ItemComboBox<ParserType>)TypeSiteCombobox.SelectedItem).Value;
             var browser = ((ItemComboBox<SupportedSeleniumBrowsers>)SelectBrowserComboBox.SelectedItem).Value;
@@ -276,7 +274,7 @@ namespace EmailParserView
             {
                 var typeSaver = ((ItemComboBox<TypeSaver>)AutoSaveComboBox.SelectedItem).Value;
                 var resultSaver = GetSaverFabricMethod(typeSaver);
-                var rootPath = $"{Directory.GetCurrentDirectory()}\\resultParse.{resultSaver.FileFormat}";
+                var rootPath = $"{Directory.GetCurrentDirectory()}\\Backup\\resultParse{DateTime.Now}.{resultSaver.FileFormat}";
                 if (!File.Exists(rootPath))
                 {
                     File.CreateText(rootPath);
@@ -296,6 +294,12 @@ namespace EmailParserView
         private void выходToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void ClearPersonsButton_Click(object sender, EventArgs e)
+        {
+            ReturnedEmailDataGrid.Rows.Clear();
+            _persons.Clear();
         }
     }
 }

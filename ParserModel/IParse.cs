@@ -11,5 +11,7 @@ namespace ParserModel
 
         int GetCountArticle(string url);
 
+        void Restart();
+
     }
 }

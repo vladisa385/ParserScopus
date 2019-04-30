@@ -10,11 +10,12 @@ namespace ParserModel.ParseWithSelenium
     public abstract class AParseWithSelenium : IParse
     {
 
-        protected readonly IWebDriver Driver;
-
+        protected IWebDriver Driver;
+        private readonly ParserSettings _settings;
         protected AParseWithSelenium(ParserSettings settings)
         {
-            Driver = CreateIWebDriverFabricMethod(settings);
+            _settings = settings;
+            Driver = CreateIWebDriverFabricMethod();
         }
 
         public void Dispose()
@@ -22,12 +23,12 @@ namespace ParserModel.ParseWithSelenium
             Driver?.Dispose();
         }
 
-        protected IWebDriver CreateIWebDriverFabricMethod(ParserSettings settings)
+        protected IWebDriver CreateIWebDriverFabricMethod()
         {
             IWebDriver driver;
             var driverDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Proxy proxy = null;
-            switch (settings.TypeOrganization)
+            switch (_settings.TypeOrganization)
             {
                 case TypeOrganization.Private:
                     proxy = new Proxy
@@ -49,7 +50,7 @@ namespace ParserModel.ParseWithSelenium
                     break;
 
             }
-            switch (settings.Browser)
+            switch (_settings.Browser)
             {
                 case SupportedSeleniumBrowsers.Chrome:
                     var options = new ChromeOptions
@@ -71,6 +72,11 @@ namespace ParserModel.ParseWithSelenium
                     break;
             }
             return driver;
+        }
+
+        public void Restart()
+        {
+            Driver = CreateIWebDriverFabricMethod();
         }
 
         public abstract List<Person> ParseSpecificArticle(string url);

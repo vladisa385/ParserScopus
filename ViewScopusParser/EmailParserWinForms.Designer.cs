@@ -57,6 +57,7 @@
             this.TypeSiteCombobox = new System.Windows.Forms.ComboBox();
             this.labelForSelectBrowser = new System.Windows.Forms.Label();
             this.SelectBrowserComboBox = new System.Windows.Forms.ComboBox();
+            this.ClearPersonsButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.ReturnedEmailDataGrid)).BeginInit();
             this.ProgressGroupBox.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -235,7 +236,7 @@
             // IsExportOnlyEmailcheckBox
             // 
             this.IsExportOnlyEmailcheckBox.AutoSize = true;
-            this.IsExportOnlyEmailcheckBox.Location = new System.Drawing.Point(19, 171);
+            this.IsExportOnlyEmailcheckBox.Location = new System.Drawing.Point(18, 155);
             this.IsExportOnlyEmailcheckBox.Name = "IsExportOnlyEmailcheckBox";
             this.IsExportOnlyEmailcheckBox.Size = new System.Drawing.Size(174, 17);
             this.IsExportOnlyEmailcheckBox.TabIndex = 13;
@@ -305,11 +306,22 @@
             this.SelectBrowserComboBox.Size = new System.Drawing.Size(135, 21);
             this.SelectBrowserComboBox.TabIndex = 25;
             // 
+            // ClearPersonsButton
+            // 
+            this.ClearPersonsButton.Location = new System.Drawing.Point(13, 175);
+            this.ClearPersonsButton.Name = "ClearPersonsButton";
+            this.ClearPersonsButton.Size = new System.Drawing.Size(99, 23);
+            this.ClearPersonsButton.TabIndex = 26;
+            this.ClearPersonsButton.Text = "Очистить";
+            this.ClearPersonsButton.UseVisualStyleBackColor = true;
+            this.ClearPersonsButton.Click += new System.EventHandler(this.ClearPersonsButton_Click);
+            // 
             // EmailParserWinForms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(449, 432);
+            this.Controls.Add(this.ClearPersonsButton);
             this.Controls.Add(this.SelectBrowserComboBox);
             this.Controls.Add(this.labelForSelectBrowser);
             this.Controls.Add(this.TypeSiteCombobox);
@@ -372,6 +384,7 @@
         private System.Windows.Forms.ComboBox TypeSiteCombobox;
         private System.Windows.Forms.Label labelForSelectBrowser;
         private System.Windows.Forms.ComboBox SelectBrowserComboBox;
+        private System.Windows.Forms.Button ClearPersonsButton;
     }
 }
 
