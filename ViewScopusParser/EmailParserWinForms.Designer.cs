@@ -342,7 +342,7 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "EmailParserWinForms";
-            this.Text = "Scopus Parser";
+            this.Text = "Parser";
             ((System.ComponentModel.ISupportInitialize)(this.ReturnedEmailDataGrid)).EndInit();
             this.ProgressGroupBox.ResumeLayout(false);
             this.ProgressGroupBox.PerformLayout();
