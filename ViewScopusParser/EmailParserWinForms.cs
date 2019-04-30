@@ -47,26 +47,25 @@ namespace EmailParserView
             }
             catch (DriverServiceNotFoundException ex)
             {
-                ShowErrorToUser($"При запуске парсера возникла проблема.У вас отсутствует нужный браузер{ex.Message}{ex.StackTrace}");
+                ShowErrorToUser($"При запуске парсера возникла проблема.У вас отсутствует нужный браузер{ex.Message}");
             }
             catch (NoSuchElementException ex)
             {
-                ShowErrorToUser($@"Проверьте Ваше интернет-соединение. Возможно, вы забыли подключить VPN или указали неверную ссылку.{ex.Message}{ex.StackTrace}");
+                ShowErrorToUser($@"Проверьте Ваше интернет-соединение. Возможно, вы забыли подключить VPN или указали неверную ссылку.{ex.Message}");
             }
             catch (WebDriverException ex)
             {
-                ShowErrorToUser($@"При запуске парсера возникла проблема. Возможно,вы указали неверный URL.{ex.Message}{ex.StackTrace}");
+                ShowErrorToUser($@"При запуске парсера возникла проблема. Возможно,вы указали неверный URL.{ex.Message}");
             }
             catch (Exception ex)
             {
-                ShowErrorToUser($@"{ex.Message}{ex.StackTrace}");
+                ShowErrorToUser($@"{ex.Message}");
             }
             finally
             {
                 parser?.Dispose();
                 ChangeControlInMainUi(ProgressGroupBox, () => ProgressGroupBox.Visible = false);
                 ChangeControlInMainUi(StartParseButton, () => StartParseButton.Enabled = true);
-                _countForAutoSave = 0;
             }
 
         }
@@ -298,6 +297,7 @@ namespace EmailParserView
 
         private void ClearPersonsButton_Click(object sender, EventArgs e)
         {
+            _countForAutoSave = 0;
             ReturnedEmailDataGrid.Rows.Clear();
             _persons.Clear();
         }

@@ -76,6 +76,7 @@ namespace ParserModel.ParseWithSelenium
 
         public void Restart()
         {
+            Driver?.Dispose();
             Driver = CreateIWebDriverFabricMethod();
         }
 
