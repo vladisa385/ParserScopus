@@ -169,8 +169,6 @@ namespace EmailParserView
             if (progressBar1.Value - _countForAutoSave < Properties.Settings.Default.AutoSaveStep)
                 return;
             _countForAutoSave = _countForAutoSave += (int)Properties.Settings.Default.AutoSaveStep;
-            if(!Properties.Settings.Default.IsAutoSave)
-                return;
             try
             {
                 var typeSaver = (TypeSaver)AutoSaveComboBox.SelectedItem;

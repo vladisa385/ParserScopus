@@ -8,5 +8,8 @@
     <Setting Name="CountAttempt" Type="System.UInt32" Scope="User">
       <Value Profile="(Default)">15</Value>
     </Setting>
+    <Setting Name="Delay" Type="System.UInt32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

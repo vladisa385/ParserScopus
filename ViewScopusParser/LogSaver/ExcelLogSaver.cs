@@ -41,7 +41,7 @@ namespace EmailParserView.LogSaver
                 workbook.SaveAs(pathToWrite);
                 excelapp.Quit();
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 //MessageBox.Show(
                 //    $@"Во время записи в excel файл произошла ошибка {exception.Message} {exception.StackTrace}");

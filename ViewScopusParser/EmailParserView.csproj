@@ -67,7 +67,9 @@
       <DependentUpon>EmailParserWinForms.cs</DependentUpon>
     </Compile>
     <Compile Include="LogSaver\TypeSaver.cs" />
+    <Compile Include="LogSaver\TypeSaverExtension.cs" />
     <Compile Include="ParserType.cs" />
+    <Compile Include="ParserTypeExtension.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="EmailParserWinForms.resx">

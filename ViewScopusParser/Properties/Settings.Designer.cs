@@ -46,5 +46,17 @@ namespace EmailParserView.Properties {
                 this["CountAttempt"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public uint Delay {
+            get {
+                return ((uint)(this["Delay"]));
+            }
+            set {
+                this["Delay"] = value;
+            }
+        }
     }
 }
