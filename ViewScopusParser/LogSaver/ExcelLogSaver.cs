@@ -39,7 +39,6 @@ namespace EmailParserView.LogSaver
                     }
                 }
 
-
                 workbook.SaveAs(pathToWrite);
                 excelapp.Quit();
             }

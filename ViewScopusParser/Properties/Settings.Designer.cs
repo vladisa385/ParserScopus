@@ -25,7 +25,7 @@ namespace EmailParserView.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
         public uint AutoSaveStep {
             get {
                 return ((uint)(this["AutoSaveStep"]));
@@ -37,7 +37,7 @@ namespace EmailParserView.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
         public uint CountAttempt {
             get {
                 return ((uint)(this["CountAttempt"]));

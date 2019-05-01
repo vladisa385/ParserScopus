@@ -3,10 +3,10 @@
   <Profiles />
   <Settings>
     <Setting Name="AutoSaveStep" Type="System.UInt32" Scope="User">
-      <Value Profile="(Default)">100</Value>
+      <Value Profile="(Default)">10</Value>
     </Setting>
     <Setting Name="CountAttempt" Type="System.UInt32" Scope="User">
-      <Value Profile="(Default)">3</Value>
+      <Value Profile="(Default)">15</Value>
     </Setting>
   </Settings>
 </SettingsFile>

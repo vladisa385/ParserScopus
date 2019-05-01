@@ -19,10 +19,10 @@ namespace EmailParserView.LogSaver
         {
             try
             {
-                using (TextWriter tw = new StreamWriter(pathToFile))
+                using (var w = File.AppendText(pathToFile))
                 {
                     foreach (var person in resultPersons)
-                        tw.WriteLine(person.ToString(isOnlyEmail));
+                        w.WriteLine(person.ToString(isOnlyEmail));
                 }
             }
             catch (Exception e)
