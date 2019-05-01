@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using ParserModel;
 
 namespace EmailParserView.LogSaver
@@ -6,6 +7,6 @@ namespace EmailParserView.LogSaver
     public interface ILogSave
     {
         string FileFormat { get; }
-        void Save(List<Person> resultPersons, string pathToWrite, bool isOnlyEmail);
+        Task Save(List<Person> resultPersons, string pathToWrite, bool isOnlyEmail);
     }
 }

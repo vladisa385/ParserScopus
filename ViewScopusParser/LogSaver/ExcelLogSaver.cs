@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Office.Interop.Excel;
 using ParserModel;
@@ -18,34 +19,39 @@ namespace EmailParserView.LogSaver
 
         public string FileFormat { get; }
 
-        public void Save(List<Person> resultPersons, string pathToWrite, bool isOnlyEmail)
+        public Task Save(List<Person> resultPersons, string pathToWrite, bool isOnlyEmail)
         {
-            Application excelapp = new Application
+            return Task.Run(() =>
             {
-                AlertBeforeOverwriting = false,
-                DisplayAlerts = false
-            };
-
-            try
-            {
-                Workbook workbook = excelapp.Workbooks.Add();
-                Worksheet worksheet = workbook.ActiveSheet;
-
-                for (int i = 1; i < _datagrid.RowCount + 1; i++)
+                Application excelapp = new Application
                 {
-                    for (int j = 1; j < _datagrid.ColumnCount + 1; j++)
+                    AlertBeforeOverwriting = false,
+                    DisplayAlerts = false
+                };
+
+                try
+                {
+                    Workbook workbook = excelapp.Workbooks.Add();
+                    Worksheet worksheet = workbook.ActiveSheet;
+
+                    for (int i = 1; i < _datagrid.RowCount + 1; i++)
                     {
-                        worksheet.Rows[i].Columns[j] = _datagrid.Rows[i - 1].Cells[j - 1].Value;
+                        for (int j = 1; j < _datagrid.ColumnCount + 1; j++)
+                        {
+                            worksheet.Rows[i].Columns[j] = _datagrid.Rows[i - 1].Cells[j - 1].Value;
+                        }
                     }
+
+                    workbook.SaveAs(pathToWrite);
+                    excelapp.Quit();
                 }
-                workbook.SaveAs(pathToWrite);
-                excelapp.Quit();
-            }
-            catch (Exception)
-            {
-                //MessageBox.Show(
-                //    $@"Во время записи в excel файл произошла ошибка {exception.Message} {exception.StackTrace}");
-            }
+                catch (Exception)
+                {
+                    //MessageBox.Show(
+                    //    $@"Во время записи в excel файл произошла ошибка {exception.Message} {exception.StackTrace}");
+                }
+            });
+
         }
     }
 }

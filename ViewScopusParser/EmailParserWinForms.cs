@@ -21,8 +21,16 @@ namespace EmailParserView
             _persons = new List<Person>();
             _countForAutoSave = 0;
             InitializeComponent();
-            SeedAllCombobox();
+            SeedComboboxBySpecificEnum(TypeOrganizationCombobox, typeof(TypeOrganization));
+            SeedComboboxBySpecificEnum(AutoSaveComboBox, typeof(TypeSaver));
+            SeedComboboxBySpecificEnum(TypeSiteCombobox, typeof(ParserType));
+            SeedComboboxBySpecificEnum(SelectBrowserComboBox, typeof(SupportedSeleniumBrowsers));
+        }
 
+        public void SeedComboboxBySpecificEnum(ComboBox combobox, Type type)
+        {
+            combobox.DataSource = Enum.GetValues(type);
+            combobox.SelectedIndex = 0;
         }
 
         private void StartParseButton_Click(object sender, EventArgs e)
@@ -98,20 +106,6 @@ namespace EmailParserView
             control.Invoke(action);
         }
 
-        private void SeedAllCombobox()
-        {
-            SeedComboboxBySpecificEnum(TypeOrganizationCombobox, typeof(TypeOrganization));
-            SeedComboboxBySpecificEnum(AutoSaveComboBox, typeof(TypeSaver));
-            SeedComboboxBySpecificEnum(TypeSiteCombobox, typeof(ParserType));
-            SeedComboboxBySpecificEnum(SelectBrowserComboBox, typeof(SupportedSeleniumBrowsers));
-        }
-
-        private void SeedComboboxBySpecificEnum(ComboBox combobox, Type type)
-        {
-            combobox.DataSource = Enum.GetValues(type);
-            combobox.SelectedIndex = 0;
-        }
-
         private void ShowErrorToUser(string text)
         {
             MessageBox.Show(
@@ -134,7 +128,7 @@ namespace EmailParserView
             }
         }
 
-        private void txtToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void txtToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var saveFileDialog = new SaveFileDialog
             {
@@ -146,10 +140,10 @@ namespace EmailParserView
             if (saveFileDialog.ShowDialog() != DialogResult.OK)
                 return;
             var saver = TypeSaver.Txt.GetSaverFabricMethod(ReturnedEmailDataGrid);
-            Task.Run(() => saver.Save(_persons, saveFileDialog.FileName, IsExportOnlyEmailcheckBox.Checked));
+            await saver.Save(_persons, saveFileDialog.FileName, IsExportOnlyEmailcheckBox.Checked);
         }
 
-        private void excelToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void excelToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var saveFileDialog = new SaveFileDialog
             {
@@ -161,32 +155,27 @@ namespace EmailParserView
             if (saveFileDialog.ShowDialog() != DialogResult.OK)
                 return;
             var saver = TypeSaver.Excel.GetSaverFabricMethod(ReturnedEmailDataGrid);
-            Task.Run(() => saver.Save(_persons, saveFileDialog.FileName, IsExportOnlyEmailcheckBox.Checked));
+            await saver.Save(_persons, saveFileDialog.FileName, IsExportOnlyEmailcheckBox.Checked);
         }
 
-        private void ReturnedEmailDataGrid_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        private async void ReturnedEmailDataGrid_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
-            if (progressBar1.Value - _countForAutoSave < Properties.Settings.Default.AutoSaveStep)
-                return;
+            if (!IsDataReadyForAutoSave()) return;
             _countForAutoSave = _countForAutoSave += (int)Properties.Settings.Default.AutoSaveStep;
-            try
-            {
-                var typeSaver = (TypeSaver)AutoSaveComboBox.SelectedItem;
-                var resultSaver = typeSaver.GetSaverFabricMethod(ReturnedEmailDataGrid);
-                var rootPath = $"{Directory.GetCurrentDirectory()}\\Backup\\resultParse.{resultSaver.FileFormat}";
-
-                Task.Run(() =>
-                    resultSaver.Save(
-                    _persons,
-                    rootPath,
-                    IsExportOnlyEmailcheckBox.Checked));
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
+            var typeSaver = (TypeSaver)AutoSaveComboBox.SelectedItem;
+            var resultSaver = typeSaver.GetSaverFabricMethod(ReturnedEmailDataGrid);
+            var rootPath = $"{Directory.GetCurrentDirectory()}\\Backup\\resultParse.{resultSaver.FileFormat}";
+            await resultSaver.Save(
+                _persons,
+                rootPath,
+                IsExportOnlyEmailcheckBox.Checked);
         }
 
+
+        private bool IsDataReadyForAutoSave()
+        {
+            return progressBar1.Value - _countForAutoSave > Properties.Settings.Default.AutoSaveStep;
+        }
         private void выходToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();
