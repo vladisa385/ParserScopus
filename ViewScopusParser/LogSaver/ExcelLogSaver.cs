@@ -38,14 +38,13 @@ namespace EmailParserView.LogSaver
                         worksheet.Rows[i].Columns[j] = _datagrid.Rows[i - 1].Cells[j - 1].Value;
                     }
                 }
-
                 workbook.SaveAs(pathToWrite);
                 excelapp.Quit();
             }
             catch (Exception exception)
             {
-                MessageBox.Show(
-                    $@"Во время записи в excel файл произошла ошибка {exception.Message} {exception.StackTrace}");
+                //MessageBox.Show(
+                //    $@"Во время записи в excel файл произошла ошибка {exception.Message} {exception.StackTrace}");
             }
         }
     }

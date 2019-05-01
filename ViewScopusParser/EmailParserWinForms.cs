@@ -273,7 +273,8 @@ namespace EmailParserView
             {
                 var typeSaver = ((ItemComboBox<TypeSaver>)AutoSaveComboBox.SelectedItem).Value;
                 var resultSaver = GetSaverFabricMethod(typeSaver);
-                var rootPath = $@"{Directory.GetCurrentDirectory()}\Backup\\resultParse[{DateTime.Now:hh_mm_ss}].{resultSaver.FileFormat}";
+                var rootPath = $"{Directory.GetCurrentDirectory()}\\Backup\\resultParse.{resultSaver.FileFormat}";
+
                 Task.Run(() =>
                     resultSaver.Save(
                     _persons,
