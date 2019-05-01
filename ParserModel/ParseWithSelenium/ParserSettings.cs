@@ -1,4 +1,4 @@
-﻿namespace ParserModel
+﻿namespace ParserModel.ParseWithSelenium
 {
     public class ParserSettings
     {

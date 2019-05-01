@@ -1,13 +1,13 @@
-﻿namespace ParserModel
+﻿namespace ParserModel.ParseWithSelenium
 {
     public enum SupportedSeleniumBrowsers
     {
         Chrome,
         FireFox,
-        Opera,
-        Safari,
-        Edge,
-        IE
+        //Opera,
+        //Safari,
+        //Edge,
+        //IE
     }
 
 }

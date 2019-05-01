@@ -6,8 +6,7 @@ using System.Windows.Forms;
 using EmailParserView.LogSaver;
 using OpenQA.Selenium;
 using ParserModel;
-using ScopusParserImplementation;
-using WebOfScienceParserImplementation;
+using ParserModel.ParseWithSelenium;
 using Action = System.Action;
 using TextBox = System.Windows.Forms.TextBox;
 
@@ -22,7 +21,7 @@ namespace EmailParserView
             _persons = new List<Person>();
             _countForAutoSave = 0;
             InitializeComponent();
-            SeedAllComboboxValuesAndText();
+            SeedAllCombobox();
 
         }
 
@@ -30,9 +29,9 @@ namespace EmailParserView
         {
             ProgressGroupBox.Visible = true;
             StartParseButton.Enabled = false;
-            var organization = ((ItemComboBox<TypeOrganization>)TypeOrganizationCombobox.SelectedItem).Value;
-            var typeParser = ((ItemComboBox<ParserType>)TypeSiteCombobox.SelectedItem).Value;
-            var browser = ((ItemComboBox<SupportedSeleniumBrowsers>)SelectBrowserComboBox.SelectedItem).Value;
+            var organization = (TypeOrganization)TypeOrganizationCombobox.SelectedItem;
+            var typeParser = (ParserType)TypeSiteCombobox.SelectedItem;
+            var browser = (SupportedSeleniumBrowsers)SelectBrowserComboBox.SelectedItem;
             var settings = new ParserSettings(browser, organization);
             Task.Run(() => HandleErrorsAndBeginParsing(typeParser, settings));
         }
@@ -42,7 +41,7 @@ namespace EmailParserView
             IParse parser = null;
             try
             {
-                parser = GetParserFabricMethod(parserType, settings);
+                parser = parserType.GetParserFabricMethod(settings);
                 StartParsing(parser);
             }
             catch (DriverServiceNotFoundException ex)
@@ -68,40 +67,6 @@ namespace EmailParserView
                 ChangeControlInMainUi(StartParseButton, () => StartParseButton.Enabled = true);
             }
 
-        }
-
-        private IParse GetParserFabricMethod(ParserType typeParser, ParserSettings settings)
-        {
-            IParse baseParser = null;
-            switch (typeParser)
-            {
-                case ParserType.Scopus:
-                    baseParser = new ScopusParser(settings);
-                    break;
-                case ParserType.WebOfSciense:
-                    baseParser = new WebOfScienceParser(settings);
-                    break;
-            }
-            var delay = uint.Parse(delayTextBox.Text) * 1000;
-            var countAttempts = Properties.Settings.Default.CountAttempt;
-            var loggerParser = new LoggerParser(baseParser);
-            baseParser = new SleepRetryerParser(loggerParser, countAttempts, delay);
-            return baseParser;
-        }
-
-        private ILogSave GetSaverFabricMethod(TypeSaver typeSaver)
-        {
-            ILogSave resultSaver = null;
-            switch (typeSaver)
-            {
-                case TypeSaver.Excel:
-                    resultSaver = new ExcelLogSaver(ReturnedEmailDataGrid);
-                    break;
-                case TypeSaver.Txt:
-                    resultSaver = new TxtLogSaver();
-                    break;
-            }
-            return resultSaver;
         }
 
         private void StartParsing(IParse parser)
@@ -133,82 +98,18 @@ namespace EmailParserView
             control.Invoke(action);
         }
 
-        private void SeedAllComboboxValuesAndText()
+        private void SeedAllCombobox()
         {
-            var itemsForTypeOrganization = new System.Collections.Generic.List<ItemComboBox<TypeOrganization>>
-            {
-                new ItemComboBox<TypeOrganization>
-                {
-                    Text = "Личный ПК",
-                    Value = TypeOrganization.Private
-                },
-                 new ItemComboBox<TypeOrganization>
-                 {
-                    Text = "СФУ",
-                    Value = TypeOrganization.SFU
-                },
-               new ItemComboBox<TypeOrganization>
-               {
-                    Text = "СибГАУ",
-                    Value = TypeOrganization.SibGau
-                }
-            };
-            TypeOrganizationCombobox.Items.AddRange(items: itemsForTypeOrganization.ToArray());
-            TypeOrganizationCombobox.SelectedIndex = 0;
+            SeedComboboxBySpecificEnum(TypeOrganizationCombobox, typeof(TypeOrganization));
+            SeedComboboxBySpecificEnum(AutoSaveComboBox, typeof(TypeSaver));
+            SeedComboboxBySpecificEnum(TypeSiteCombobox, typeof(ParserType));
+            SeedComboboxBySpecificEnum(SelectBrowserComboBox, typeof(SupportedSeleniumBrowsers));
+        }
 
-            var itemsForAutoSaveMode = new System.Collections.Generic.List<ItemComboBox<TypeSaver>>
-            {
-                new ItemComboBox<TypeSaver>
-                {
-                    Text = "Нет автосохранения",
-                    Value = default(TypeSaver)
-                },
-                new  ItemComboBox<TypeSaver>
-                {
-                    Text = "Автосохранение в excel",
-                    Value = TypeSaver.Excel
-                },
-                new  ItemComboBox<TypeSaver>
-                {
-                    Text = "Автосохранение в txt",
-                    Value = TypeSaver.Txt
-                }
-            };
-            AutoSaveComboBox.Items.AddRange(items: itemsForAutoSaveMode.ToArray());
-            AutoSaveComboBox.SelectedIndex = 0;
-
-            var itemsForTypeSite = new System.Collections.Generic.List<ItemComboBox<ParserType>>
-            {
-                new ItemComboBox<ParserType>
-                {
-                    Text = "Scopus",
-                    Value = ParserType.Scopus
-                },
-                new  ItemComboBox<ParserType>
-                {
-                    Text = "WebOfScience",
-                    Value = ParserType.WebOfSciense
-                },
-            };
-            TypeSiteCombobox.Items.AddRange(items: itemsForTypeSite.ToArray());
-            TypeSiteCombobox.SelectedIndex = 0;
-
-            var itemsForBrowsers = new System.Collections.Generic.List<ItemComboBox<SupportedSeleniumBrowsers>>
-            {
-                new ItemComboBox<SupportedSeleniumBrowsers>
-                {
-                    Text = "Chrome",
-                    Value = SupportedSeleniumBrowsers.Chrome
-                },
-                new  ItemComboBox<SupportedSeleniumBrowsers>
-                {
-                    Text = "FireFox",
-                    Value = SupportedSeleniumBrowsers.FireFox
-                },
-            };
-            SelectBrowserComboBox.Items.AddRange(items: itemsForBrowsers.ToArray());
-            SelectBrowserComboBox.SelectedIndex = 0;
-
+        private void SeedComboboxBySpecificEnum(ComboBox combobox, Type type)
+        {
+            combobox.DataSource = Enum.GetValues(type);
+            combobox.SelectedIndex = 0;
         }
 
         private void ShowErrorToUser(string text)
@@ -244,7 +145,7 @@ namespace EmailParserView
             };
             if (saveFileDialog.ShowDialog() != DialogResult.OK)
                 return;
-            var saver = GetSaverFabricMethod(TypeSaver.Txt);
+            var saver = TypeSaver.Txt.GetSaverFabricMethod(ReturnedEmailDataGrid);
             Task.Run(() => saver.Save(_persons, saveFileDialog.FileName, IsExportOnlyEmailcheckBox.Checked));
         }
 
@@ -259,7 +160,7 @@ namespace EmailParserView
             };
             if (saveFileDialog.ShowDialog() != DialogResult.OK)
                 return;
-            var saver = GetSaverFabricMethod(TypeSaver.Excel);
+            var saver = TypeSaver.Excel.GetSaverFabricMethod(ReturnedEmailDataGrid);
             Task.Run(() => saver.Save(_persons, saveFileDialog.FileName, IsExportOnlyEmailcheckBox.Checked));
         }
 
@@ -268,11 +169,12 @@ namespace EmailParserView
             if (progressBar1.Value - _countForAutoSave < Properties.Settings.Default.AutoSaveStep)
                 return;
             _countForAutoSave = _countForAutoSave += (int)Properties.Settings.Default.AutoSaveStep;
-
+            if(!Properties.Settings.Default.IsAutoSave)
+                return;
             try
             {
-                var typeSaver = ((ItemComboBox<TypeSaver>)AutoSaveComboBox.SelectedItem).Value;
-                var resultSaver = GetSaverFabricMethod(typeSaver);
+                var typeSaver = (TypeSaver)AutoSaveComboBox.SelectedItem;
+                var resultSaver = typeSaver.GetSaverFabricMethod(ReturnedEmailDataGrid);
                 var rootPath = $"{Directory.GetCurrentDirectory()}\\Backup\\resultParse.{resultSaver.FileFormat}";
 
                 Task.Run(() =>
