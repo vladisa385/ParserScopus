@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ParserModel
 {
     public interface IParse : IDisposable
     {
-        List<Person> ParseSpecificArticle(string url);
+        Task<List<Person>> ParseSpecificArticle(string url);
 
-        string GetNextArticle(string url);
+        Task<string> GetNextArticle(string url);
 
-        int GetCountArticle(string url);
+        Task<int> GetCountArticle(string url);
 
-        void Restart();
+        Task Restart();
 
     }
 }

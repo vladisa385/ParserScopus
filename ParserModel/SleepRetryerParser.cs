@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
+using static System.Threading.Tasks.Task;
 
 namespace ParserModel
 {
@@ -21,18 +23,19 @@ namespace ParserModel
             _parser.Dispose();
         }
 
-        public int GetCountArticle(string url)
+        public async Task<int> GetCountArticle(string url)
         {
-            Thread.Sleep((int)_miliSecondForSleeping);
-            return InvokeMethodWithCountAttempts(_parser.GetCountArticle, url);
+            await Delay((int)_miliSecondForSleeping);
+            var result = await InvokeMethodWithCountAttempts(_parser.GetCountArticle, url);
+            return result;
         }
 
-        public void Restart()
+        public async Task Restart()
         {
-            _parser.Restart();
+            await _parser.Restart();
         }
 
-        public string GetNextArticle(string url)
+        public async Task<string> GetNextArticle(string url)
         {
             var localCountAttempts = 0;
             string result = null;
@@ -40,15 +43,15 @@ namespace ParserModel
             {
                 try
                 {
-                    Thread.Sleep((int)_miliSecondForSleeping);
-                    result = _parser.GetNextArticle(url);
+                    await Delay((int)_miliSecondForSleeping);
+                    result = await _parser.GetNextArticle(url);
                     if (result != null)
                         return result;
                     localCountAttempts += 1;
                 }
                 catch (Exception)
                 {
-                    Restart();
+                    await Restart();
                     localCountAttempts += 1;
                     if (localCountAttempts == _countAttempts)
                         throw;
@@ -58,24 +61,25 @@ namespace ParserModel
             return result;
         }
 
-        public List<Person> ParseSpecificArticle(string url)
+        public async Task<List<Person>> ParseSpecificArticle(string url)
         {
-            return InvokeMethodWithCountAttempts(_parser.ParseSpecificArticle, url);
+            var result = await InvokeMethodWithCountAttempts(_parser.ParseSpecificArticle, url);
+            return result;
         }
 
-        private TOutput InvokeMethodWithCountAttempts<TParam, TOutput>(Func<TParam, TOutput> func, TParam delegateParam)
+        private async Task<TOutput> InvokeMethodWithCountAttempts<TParam, TOutput>(Func<TParam, Task<TOutput>> func, TParam delegateParam)
         {
             var localCountAttempts = 0;
             while (true)
             {
                 try
                 {
-                    Thread.Sleep((int)_miliSecondForSleeping);
-                    return func(delegateParam);
+                    await Delay((int)_miliSecondForSleeping);
+                    return await func(delegateParam);
                 }
                 catch (Exception)
                 {
-                    Restart();
+                    await Restart();
                     localCountAttempts += 1;
                     if (localCountAttempts == _countAttempts)
                         throw;

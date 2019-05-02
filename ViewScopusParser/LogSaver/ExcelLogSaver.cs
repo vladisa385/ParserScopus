@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Office.Interop.Excel;
 using ParserModel;
+using static System.Threading.Tasks.Task;
 using Application = Microsoft.Office.Interop.Excel.Application;
 
 namespace EmailParserView.LogSaver
@@ -19,9 +20,9 @@ namespace EmailParserView.LogSaver
 
         public string FileFormat { get; }
 
-        public Task Save(List<Person> resultPersons, string pathToWrite, bool isOnlyEmail)
+        public async Task Save(List<Person> resultPersons, string pathToWrite, bool isOnlyEmail)
         {
-            return Task.Run(() =>
+            await Run(() =>
             {
                 Application excelapp = new Application
                 {

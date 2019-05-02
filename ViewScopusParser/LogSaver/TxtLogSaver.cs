@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ParserModel;
+using static System.Threading.Tasks.Task;
 
 namespace EmailParserView.LogSaver
 {
@@ -16,9 +17,9 @@ namespace EmailParserView.LogSaver
 
         public string FileFormat { get; }
 
-        public Task Save(List<Person> resultPersons, string pathToFile, bool isOnlyEmail)
+        public async Task Save(List<Person> resultPersons, string pathToFile, bool isOnlyEmail)
         {
-            return Task.Run(() =>
+            await Run(() =>
                 {
                     try
                     {

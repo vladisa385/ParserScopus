@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace ParserModel
 {
@@ -13,7 +14,7 @@ namespace ParserModel
         {
             _parser = parser;
             string rootPath = Directory.GetCurrentDirectory() + "\\Logs.txt";
-            InvokeFuncWithLogException(u => !File.Exists(u) ? File.CreateText(u) : null, rootPath);
+            //InvokeFuncWithLogException(u => !File.Exists(u) ? File.CreateText(u) : null, rootPath);
             _pathToLog = rootPath;
         }
 
@@ -24,36 +25,38 @@ namespace ParserModel
             LogWithDate("[Dispose] Успешно выполнили");
         }
 
-        public List<Person> ParseSpecificArticle(string url)
+        public async Task<List<Person>> ParseSpecificArticle(string url)
         {
             LogWithDate($"[ParseSpecificArticle] Начинаем выполнение для {url}");
-            var res = InvokeFuncWithLogException(_parser.ParseSpecificArticle, url);
+            var res = await InvokeFuncWithLogException(_parser.ParseSpecificArticle, url);
             LogWithDate($"[ParseSpecificArticle] Успешно выполнили и вернули  {res.Count} имейлов");
             return res;
         }
 
-        public string GetNextArticle(string url)
+
+        public async Task<string> GetNextArticle(string url)
         {
             LogWithDate("[GetNextArticle] Начинаем выполнение");
-            var res = InvokeFuncWithLogException(_parser.GetNextArticle, url);
+            var res = await InvokeFuncWithLogException(_parser.GetNextArticle, url);
             LogWithDate(res != null
                 ? $"[GetNextArticle] Успешно выполнили и вернули {url})"
                 : "[GetNextArticle] Успешно выполнили, но следующую статью не вернули");
             return res;
         }
 
-        public int GetCountArticle(string url)
+        public async Task<int> GetCountArticle(string url)
         {
+
             LogWithDate("[GetCountArticle] Начинаем выполнение");
-            var res = InvokeFuncWithLogException(_parser.GetCountArticle, url);
+            var res = await InvokeFuncWithLogException(_parser.GetCountArticle, url);
             LogWithDate($"[GetCountArticle] Успешно выполнили и вернули  {res} количество");
             return res;
         }
 
-        public void Restart()
+        public async Task Restart()
         {
             LogWithDate("[Restart] Начинаем перезапуск парсера");
-            _parser.Restart();
+            await _parser.Restart();
             LogWithDate("[Restart] Успешно перезапустили");
         }
 
@@ -73,19 +76,17 @@ namespace ParserModel
             }
         }
 
-        private TOutput InvokeFuncWithLogException<TParam, TOutput>(Func<TParam, TOutput> func, TParam delegateParam)
+        private async Task<TOutput> InvokeFuncWithLogException<TParam, TOutput>(Func<TParam, Task<TOutput>> func, TParam delegateParam)
         {
-
             try
             {
-                return func(delegateParam);
+                return await func(delegateParam);
             }
             catch (Exception e)
             {
                 LogWithDate(e.Message);
             }
-            return func(delegateParam);
+            return await func(delegateParam);
         }
-
     }
 }

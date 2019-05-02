@@ -7,6 +7,7 @@ using EmailParserView.LogSaver;
 using OpenQA.Selenium;
 using ParserModel;
 using ParserModel.ParseWithSelenium;
+using static System.Threading.Tasks.Task;
 using Action = System.Action;
 using TextBox = System.Windows.Forms.TextBox;
 
@@ -16,6 +17,7 @@ namespace EmailParserView
     {
         private readonly List<Person> _persons;
         private int _countForAutoSave;
+
         public EmailParserWinForms()
         {
             _persons = new List<Person>();
@@ -33,7 +35,7 @@ namespace EmailParserView
             combobox.SelectedIndex = 0;
         }
 
-        private void StartParseButton_Click(object sender, EventArgs e)
+        private async void StartParseButton_Click(object sender, EventArgs e)
         {
             ProgressGroupBox.Visible = true;
             StartParseButton.Enabled = false;
@@ -41,63 +43,60 @@ namespace EmailParserView
             var typeParser = (ParserType)TypeSiteCombobox.SelectedItem;
             var browser = (SupportedSeleniumBrowsers)SelectBrowserComboBox.SelectedItem;
             var settings = new ParserSettings(browser, organization);
-            Task.Run(() => HandleErrorsAndBeginParsing(typeParser, settings));
-        }
-
-        private void HandleErrorsAndBeginParsing(ParserType parserType, ParserSettings settings)
-        {
             IParse parser = null;
             try
             {
-                parser = parserType.GetParserFabricMethod(settings);
-                StartParsing(parser);
+                parser = typeParser.GetParserFabricMethod(settings);
+                await Run(() => StartParsing(parser));
             }
             catch (DriverServiceNotFoundException ex)
             {
-                ShowErrorToUser($"При запуске парсера возникла проблема.У вас отсутствует нужный браузер{ex.Message}");
+                await ShowErrorToUser($"При запуске парсера возникла проблема.У вас отсутствует нужный браузер{ex.Message}");
             }
             catch (NoSuchElementException ex)
             {
-                ShowErrorToUser($@"Проверьте Ваше интернет-соединение. Возможно, вы забыли подключить VPN или указали неверную ссылку.{ex.Message}");
+                await ShowErrorToUser($@"Проверьте Ваше интернет-соединение. Возможно, вы забыли подключить VPN или указали неверную ссылку.{ex.Message}");
             }
             catch (WebDriverException ex)
             {
-                ShowErrorToUser($@"При запуске парсера возникла проблема. Возможно,вы указали неверный URL.{ex.Message}");
+                await ShowErrorToUser($@"При запуске парсера возникла проблема. Возможно,вы указали неверный URL.{ex.Message}");
             }
             catch (Exception ex)
             {
-                ShowErrorToUser($@"{ex.Message}");
+                await ShowErrorToUser($@"{ex.Message}");
             }
             finally
             {
                 parser?.Dispose();
-                ChangeControlInMainUi(ProgressGroupBox, () => ProgressGroupBox.Visible = false);
-                ChangeControlInMainUi(StartParseButton, () => StartParseButton.Enabled = true);
             }
-
+            ProgressGroupBox.Visible = false;
+            StartParseButton.Enabled = true;
         }
 
-        private void StartParsing(IParse parser)
+        private async Task StartParsing(IParse parser)
         {
             var firstUrl = URLTextBox.Text;
             var nextUrl = firstUrl;
             var countArticles = Convert.ToInt32(PagesCounTextBox.Text);
             ChangeControlInMainUi(progressBar1, () => progressBar1.Value = 0);
             ChangeControlInMainUi(progressBar1, () => progressBar1.Maximum = countArticles);
+
             for (; progressBar1.Value < countArticles && nextUrl != null; ChangeControlInMainUi(progressBar1, () => progressBar1.Value += 1))
             {
-                ChangeControlInMainUi(PersentLabel, () => PersentLabel.Text = $@"Парсится {progressBar1.Value} статья из {progressBar1.Maximum}({(progressBar1.Value) * 100 / progressBar1.Maximum}%)");
-                var result = parser.ParseSpecificArticle(nextUrl);
+                ChangeControlInMainUi(PersentLabel, () =>
+                 PersentLabel.Text = $@"Парсится {progressBar1.Value} статья из {progressBar1.Maximum}({(progressBar1.Value) * 100 / progressBar1.Maximum}%)");
+                var result = await parser.ParseSpecificArticle(nextUrl);
                 ChangeControlInMainUi(URLTextBox, () => URLTextBox.Text = nextUrl);
                 if (result != null)
                 {
                     _persons.AddRange(result);
                     foreach (var item in result)
                     {
-                        ChangeControlInMainUi(ReturnedEmailDataGrid, () => ReturnedEmailDataGrid.Rows.Add(item.Fio, item.Email));
+                        ChangeControlInMainUi(ReturnedEmailDataGrid,
+                            () => ReturnedEmailDataGrid.Rows.Add(item.Fio, item.Email));
                     }
                 }
-                nextUrl = parser.GetNextArticle(nextUrl);
+                nextUrl = await parser.GetNextArticle(nextUrl);
             }
         }
 
@@ -106,13 +105,14 @@ namespace EmailParserView
             control.Invoke(action);
         }
 
-        private void ShowErrorToUser(string text)
+        private async Task ShowErrorToUser(string text)
         {
-            MessageBox.Show(
-                    text,
-                    @"Ошибка",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+            await Run(() => MessageBox.Show(
+                text,
+                @"Ошибка",
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Warning)
+                );
         }
 
         private void PagesCounTextBox_KeyPress(object sender, KeyPressEventArgs e)
@@ -158,24 +158,26 @@ namespace EmailParserView
             await saver.Save(_persons, saveFileDialog.FileName, IsExportOnlyEmailcheckBox.Checked);
         }
 
-        private async void ReturnedEmailDataGrid_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        private void ReturnedEmailDataGrid_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
             if (!IsDataReadyForAutoSave()) return;
             _countForAutoSave = _countForAutoSave += (int)Properties.Settings.Default.AutoSaveStep;
+            BackupCurrentResults();
+        }
+
+        private async void BackupCurrentResults()
+        {
             var typeSaver = (TypeSaver)AutoSaveComboBox.SelectedItem;
             var resultSaver = typeSaver.GetSaverFabricMethod(ReturnedEmailDataGrid);
             var rootPath = $"{Directory.GetCurrentDirectory()}\\Backup\\resultParse.{resultSaver.FileFormat}";
-            await resultSaver.Save(
-                _persons,
-                rootPath,
-                IsExportOnlyEmailcheckBox.Checked);
+            await resultSaver.Save(_persons, rootPath, IsExportOnlyEmailcheckBox.Checked);
         }
-
 
         private bool IsDataReadyForAutoSave()
         {
             return progressBar1.Value - _countForAutoSave > Properties.Settings.Default.AutoSaveStep;
         }
+
         private void выходToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();

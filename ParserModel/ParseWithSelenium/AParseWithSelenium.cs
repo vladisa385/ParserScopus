@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
@@ -74,14 +75,17 @@ namespace ParserModel.ParseWithSelenium
             return driver;
         }
 
-        public void Restart()
+        public Task Restart()
         {
-            Driver?.Dispose();
-            Driver = CreateIWebDriverFabricMethod();
+            return Task.Run(() =>
+            {
+                Driver?.Dispose();
+                Driver = CreateIWebDriverFabricMethod();
+            });
         }
 
-        public abstract List<Person> ParseSpecificArticle(string url);
-        public abstract string GetNextArticle(string url);
-        public abstract int GetCountArticle(string url);
+        public abstract Task<List<Person>> ParseSpecificArticle(string url);
+        public abstract Task<string> GetNextArticle(string url);
+        public abstract Task<int> GetCountArticle(string url);
     }
 }

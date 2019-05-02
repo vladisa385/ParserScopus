@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using OpenQA.Selenium;
 using ParserModel;
 using ParserModel.ParseWithSelenium;
+using static System.Threading.Tasks.Task;
 
 namespace ScopusParserImplementation
 {
@@ -14,22 +16,25 @@ namespace ScopusParserImplementation
         { }
 
 
-        public override List<Person> ParseSpecificArticle(string url)
+        public override async Task<List<Person>> ParseSpecificArticle(string url)
         {
-            Driver.Navigate().GoToUrl(url);
-            IWebElement authorsList = Driver.FindElement(By.Id("authorlist"));
-            var countEmails = Driver.FindElements(By.ClassName("correspondenceEmail")).Count;
+            await Run(() => Driver.Navigate().GoToUrl(url));
+            IWebElement authorsList = await Run(() =>
+                Driver.FindElement(By.Id("authorlist")));
+            var countEmails = await Run(() =>
+                Driver.FindElements(By.ClassName("correspondenceEmail")).Count);
             var emails = new List<Person>();
-            foreach (var element in authorsList.FindElements(By.TagName("li")))
+            foreach (var element in await Run(() =>
+                authorsList.FindElements(By.TagName("li"))))
             {
                 if (emails.Count == countEmails)
                     break;
                 try
                 {
-                    var elementWithEmail = element.FindElement(By.ClassName("correspondenceEmail"));
-                    var email = elementWithEmail.GetAttribute("href").Substring(7);
-                    var elementWithFio = element.FindElement(By.ClassName("anchorText"));
-                    var fio = RemoveBadSymbols(elementWithFio.Text);
+                    var elementWithEmail = await Run(() => element.FindElement(By.ClassName("correspondenceEmail")));
+                    var email = await Run(() => elementWithEmail.GetAttribute("href").Substring(7));
+                    var elementWithFio = await Run(() => element.FindElement(By.ClassName("anchorText")));
+                    var fio = await Run(() => RemoveBadSymbols(elementWithFio.Text));
                     emails.Add(new Person(fio, email));
                 }
                 catch (NoSuchElementException)
@@ -37,27 +42,32 @@ namespace ScopusParserImplementation
                     // ignored
                 }
             }
+
             return emails;
         }
 
-        public override string GetNextArticle(string url)
+        public override async Task<string> GetNextArticle(string url)
         {
             try
             {
-                IWebElement nextLinkUrl = Driver.FindElement(By.ClassName("nextLink"));
-                IWebElement nextLink = nextLinkUrl.FindElement(By.XPath("./a"));
-                return nextLink.GetAttribute("href");
+                var nextLinkUrl = await Run(() =>
+                    Driver.FindElement(By.ClassName("nextLink")));
+                var nextLink = await Run(() =>
+                    nextLinkUrl.FindElement(By.XPath("./a")));
+                return await Run(() =>
+                   nextLink.GetAttribute("href"));
             }
             catch (Exception)
             {
                 return null;
             }
-
         }
 
-        public override int GetCountArticle(string url)
+        public override async Task<int> GetCountArticle(string url)
         {
-            IWebElement count = Driver.FindElement(By.ClassName("recordPageCount"));
+
+            IWebElement count = await Run(() =>
+                Driver.FindElement(By.ClassName("recordPageCount")));
             string articleCount = "";
             bool check = false;
 
@@ -74,7 +84,6 @@ namespace ScopusParserImplementation
                     articleCount = articleCount + count.Text[i];
                 }
             }
-
             return articleCount == "" ? 0 : Convert.ToInt32(articleCount);
         }
 
