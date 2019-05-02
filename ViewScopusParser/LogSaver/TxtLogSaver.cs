@@ -13,9 +13,12 @@ namespace EmailParserView.LogSaver
         public TxtLogSaver()
         {
             FileFormat = "txt";
+            FileFilter = @"Текстовый документ (*.txt)|*.txt|Все файлы (*.*)|*.*";
         }
 
         public string FileFormat { get; }
+
+        public string FileFilter { get; }
 
         public async Task Save(List<Person> resultPersons, string pathToFile, bool isOnlyEmail)
         {

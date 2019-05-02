@@ -16,9 +16,12 @@ namespace EmailParserView.LogSaver
         {
             _datagrid = datagrid;
             FileFormat = "xlsx";
+            FileFilter = @"MS Excel documents (*.xlsx)|*.xlsx";
         }
 
         public string FileFormat { get; }
+
+        public string FileFilter { get; }
 
         public async Task Save(List<Person> resultPersons, string pathToWrite, bool isOnlyEmail)
         {

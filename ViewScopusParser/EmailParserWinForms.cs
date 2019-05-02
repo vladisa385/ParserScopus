@@ -120,34 +120,28 @@ namespace EmailParserView
             e.Handled = true;
         }
 
-        private async void txtToolStripMenuItem_Click(object sender, EventArgs e)
+        private void txtToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var saveFileDialog = new SaveFileDialog
-            {
-                Filter = @"Текстовый документ (*.txt)|*.txt|Все файлы (*.*)|*.*",
-                DefaultExt = "*.txt",
-                FileName = "resultsFromParse",
-                Title = @"Укажите директорию и имя файла для сохранения"
-            };
-            if (saveFileDialog.ShowDialog() != DialogResult.OK)
-                return;
-            var saver = TypeSaver.Txt.GetSaverFabricMethod(ReturnedEmailDataGrid);
-            await saver.Save(_persons, saveFileDialog.FileName, IsExportOnlyEmailcheckBox.Checked);
+            SaveToUserFilePath(TypeSaver.Txt);
         }
 
-        private async void excelToolStripMenuItem_Click(object sender, EventArgs e)
+        private void excelToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            SaveToUserFilePath(TypeSaver.Excel);
+        }
+
+        private async void SaveToUserFilePath(TypeSaver typeSaver)
+        {
+            var saver = typeSaver.GetSaverFabricMethod(ReturnedEmailDataGrid);
             var saveFileDialog = new SaveFileDialog
             {
-                Filter = @"MS Excel documents (*.xlsx)|*.xlsx",
-                DefaultExt = "*.xlsx",
+                Filter = saver.FileFilter,
+                DefaultExt = $"*.{saver.FileFormat}",
                 FileName = "resultsFromParse",
                 Title = @"Укажите директорию и имя файла для сохранения"
             };
-            if (saveFileDialog.ShowDialog() != DialogResult.OK)
-                return;
-            var saver = TypeSaver.Excel.GetSaverFabricMethod(ReturnedEmailDataGrid);
-            await saver.Save(_persons, saveFileDialog.FileName, IsExportOnlyEmailcheckBox.Checked);
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                await saver.Save(_persons, saveFileDialog.FileName, IsExportOnlyEmailcheckBox.Checked); return;
         }
 
         private void ReturnedEmailDataGrid_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
