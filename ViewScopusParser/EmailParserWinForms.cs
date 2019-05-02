@@ -107,25 +107,17 @@ namespace EmailParserView
 
         private async Task ShowErrorToUser(string text)
         {
-            await Run(() => MessageBox.Show(
-                text,
-                @"Ошибка",
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Warning)
-                );
+            await Run(() => MessageBox.Show(text, @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning));
         }
 
         private void PagesCounTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
-            e.KeyChar != '.')
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.')
             {
                 e.Handled = true;
             }
-            if (e.KeyChar == '.' && ((TextBox)sender).Text.IndexOf('.') > -1)
-            {
-                e.Handled = true;
-            }
+            if (e.KeyChar != '.' || ((TextBox)sender).Text.IndexOf('.') <= -1) return;
+            e.Handled = true;
         }
 
         private async void txtToolStripMenuItem_Click(object sender, EventArgs e)
@@ -178,16 +170,16 @@ namespace EmailParserView
             return progressBar1.Value - _countForAutoSave > Properties.Settings.Default.AutoSaveStep;
         }
 
-        private void выходToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
         private void ClearPersonsButton_Click(object sender, EventArgs e)
         {
             _countForAutoSave = 0;
             ReturnedEmailDataGrid.Rows.Clear();
             _persons.Clear();
+        }
+
+        private void выходToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }
