@@ -75,28 +75,21 @@ namespace EmailParserView
 
         private async Task StartParsing(IParse parser)
         {
-            var firstUrl = URLTextBox.Text;
-            var nextUrl = firstUrl;
+            var nextUrl = URLTextBox.Text;
             var countArticles = Convert.ToInt32(PagesCounTextBox.Text);
             ChangeControlInMainUi(progressBar1, () => progressBar1.Value = 0);
             ChangeControlInMainUi(progressBar1, () => progressBar1.Maximum = countArticles);
-
             for (; progressBar1.Value < countArticles && nextUrl != null; ChangeControlInMainUi(progressBar1, () => progressBar1.Value += 1))
             {
                 ChangeControlInMainUi(PersentLabel, () =>
                  PersentLabel.Text = $@"Парсится {progressBar1.Value} статья из {progressBar1.Maximum}({(progressBar1.Value) * 100 / progressBar1.Maximum}%)");
                 var result = await parser.ParseSpecificArticle(nextUrl);
-                ChangeControlInMainUi(URLTextBox, () => URLTextBox.Text = nextUrl);
                 if (result != null)
                 {
-                    _persons.AddRange(result);
-                    foreach (var item in result)
-                    {
-                        ChangeControlInMainUi(ReturnedEmailDataGrid,
-                            () => ReturnedEmailDataGrid.Rows.Add(item.Fio, item.Email));
-                    }
+                    AddEmails(result);
                 }
                 nextUrl = await parser.GetNextArticle(nextUrl);
+                ChangeControlInMainUi(URLTextBox, () => URLTextBox.Text = nextUrl);
             }
         }
 
@@ -108,6 +101,16 @@ namespace EmailParserView
         private async Task ShowErrorToUser(string text)
         {
             await Run(() => MessageBox.Show(text, @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning));
+        }
+
+        private void AddEmails(List<Person> emails)
+        {
+            _persons.AddRange(emails);
+            foreach (var item in emails)
+            {
+                ChangeControlInMainUi(ReturnedEmailDataGrid,
+                    () => ReturnedEmailDataGrid.Rows.Add(item.Fio, item.Email));
+            }
         }
 
         private void PagesCounTextBox_KeyPress(object sender, KeyPressEventArgs e)
