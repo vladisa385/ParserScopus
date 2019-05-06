@@ -46,6 +46,10 @@ namespace ParserModel
                         return result;
                     localCountAttempts += 1;
                 }
+                catch (OpenQA.Selenium.NoSuchWindowException)
+                {
+                    throw;
+                }
                 catch (Exception)
                 {
                     Restart();
@@ -72,6 +76,10 @@ namespace ParserModel
                 {
                     Thread.Sleep((int)_miliSecondForSleeping);
                     return func(delegateParam);
+                }
+                catch (OpenQA.Selenium.NoSuchWindowException)
+                {
+                    throw;
                 }
                 catch (Exception)
                 {

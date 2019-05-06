@@ -53,6 +53,10 @@ namespace EmailParserView
             {
                 ShowErrorToUser($@"Проверьте Ваше интернет-соединение. Возможно, вы забыли подключить VPN или указали неверную ссылку.{ex.Message}");
             }
+            catch (NoSuchWindowException ex)
+            {
+                ShowErrorToUser($@"При запуске парсера возникла проблема. Окно браузера было закрыто.{ex.Message}");
+            }
             catch (WebDriverException ex)
             {
                 ShowErrorToUser($@"При запуске парсера возникла проблема. Возможно,вы указали неверный URL.{ex.Message}");

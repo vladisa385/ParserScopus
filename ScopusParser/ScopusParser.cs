@@ -17,9 +17,18 @@ namespace ScopusParserImplementation
         public override List<Person> ParseSpecificArticle(string url)
         {
             Driver.Navigate().GoToUrl(url);
-            IWebElement authorsList = Driver.FindElement(By.Id("authorlist"));
-            var countEmails = Driver.FindElements(By.ClassName("correspondenceEmail")).Count;
+            IWebElement authorsList;
             var emails = new List<Person>();
+            try
+            {
+                authorsList = Driver.FindElement(By.Id("authorlist"));
+            }
+            catch (NoSuchElementException)
+            {
+                return emails;
+            }
+
+            var countEmails = Driver.FindElements(By.ClassName("correspondenceEmail")).Count;
             foreach (var element in authorsList.FindElements(By.TagName("li")))
             {
                 if (emails.Count == countEmails)
@@ -42,13 +51,14 @@ namespace ScopusParserImplementation
 
         public override string GetNextArticle(string url)
         {
+
             try
             {
-                IWebElement nextLinkUrl = Driver.FindElement(By.ClassName("nextLink"));
-                IWebElement nextLink = nextLinkUrl.FindElement(By.XPath("./a"));
+                var nextLinkUrl = Driver.FindElement(By.ClassName("nextLink"));
+                var nextLink = nextLinkUrl.FindElement(By.XPath("./a"));
                 return nextLink.GetAttribute("href");
             }
-            catch (Exception)
+            catch (NoSuchElementException)
             {
                 return null;
             }
