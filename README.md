@@ -1,6 +1,8 @@
 # ParserScopus
 It's for parsing author's email from Scopus or WebOfScience
+
 ![](https://pp.userapi.com/c855216/v855216384/8f41c/QdptkGxlQW8.jpg)
+
 ## Getting Started
 
 Use these instructions to get the project up and running.
